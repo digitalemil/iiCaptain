@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<!-- ====================================================================== -->
+<!-- ====================================================================== -->
+
+<project name="Aye aye captain!" default="phonegappkg" basedir=".">
+
+	<property name="src.dir" value="java" />
+	<property name="classes.dir" value="build" />
+	<property name="jars.dir" value="dist" />
+	<property name="js.dir" value="src" />
+
+	<target name="compile" depends="prepare.dirs">
+			<javac source="1.5" srcdir="${src.dir}" destdir="${classes.dir}" debug="on" deprecation="off" optimize="off">
+				<classpath>
+				</classpath>
+			</javac>
+		</target>
+
+	<target name="phonegappkg" depends="">
+		<exec executable="zip">
+			<arg value="-r" />
+			<arg value="iicaptain" />
+			<arg value="www" />
+		</exec>
+	</target>
+
+	<target name="phonegappkg-ios" depends="">
+		<copy file="phonegap/js/ios.js" tofile="www/phonegap/phonegap-1.4.1.js" overwrite="true"/>
+		<copy file="phonegap/configs/config.xml" tofile="www/config.xml" overwrite="true"/>		
+		<antcall target="phonegappkg">
+		</antcall>
+		<move file="iicaptain.zip" tofile="iicaptain-ios.zip" />
+	</target>
+
+	<target name="phonegappkg-bb" depends="">
+		<copy file="phonegap/js/bb.js" tofile="www/phonegap/phonegap-1.4.1.js" overwrite="true"/>
+		<copy file="phonegap/configs/bb.xml" tofile="www/config.xml" overwrite="true"/>		
+		<antcall target="phonegappkg">
+		</antcall> 
+		<move file="iicaptain.zip" tofile="iicaptain-bb.zip" />
+		<exec executable="./strip.sh" />
+	</target>
+
+	<target name="phonegappkg-android" depends="">
+		<copy file="phonegap/js/android.js" tofile="www/phonegap/phonegap-1.4.1.js" overwrite="true"/>
+		<copy file="phonegap/configs/config.xml" tofile="www/config.xml" overwrite="true"/>		
+		<antcall target="phonegappkg">
+		</antcall>
+		<move file="iicaptain.zip" tofile="iicaptain-adndroid.zip" />
+ <exec executable="./android-strip.sh" />
+
+	</target>
+
+	<target name="upload">
+		<exec executable="./upload.sh" />
+	</target>
+	<target name="prepare.dirs">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}/META-INF" />
+		<mkdir dir="${jars.dir}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${classes.dir}" />
+		<delete dir="${jars.dir}" />
+		<delete file="Tatanka.zip" />
+		<delete file="TatankaBB.zip" />
+	</target>
+
+</project>
+
