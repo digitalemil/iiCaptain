@@ -23,6 +23,13 @@
 			<arg value="iicaptain" />
 			<arg value="www" />
 		</exec>
+ <exec executable="curl">
+    <arg value="-F"/>
+    <arg value="file=@iicaptain.zip"/>
+    <arg value="-X"/>
+    <arg value="PUT"/>
+    <arg value="https://build.phonegap.com/api/v1/apps/105617?auth_token=i1c3E6MMYymBTe1Y6mBN"/>
+  </exec>
 	</target>
 
 	<target name="phonegappkg-ios" depends="">
