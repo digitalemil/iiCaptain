@@ -1,79 +1,113 @@
 <?xml version="1.0"?>
-
 <!-- ====================================================================== -->
 <!-- ====================================================================== -->
 
-<project name="Aye aye captain!" default="phonegappkg" basedir=".">
+<project
+    name="Aye Aye Captain!"
+    basedir="."
+    default="phonegappkg" >
 
-	<property name="src.dir" value="java" />
-	<property name="classes.dir" value="build" />
-	<property name="jars.dir" value="dist" />
-	<property name="js.dir" value="src" />
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" >
 
-	<target name="compile" depends="prepare.dirs">
-			<javac source="1.5" srcdir="${src.dir}" destdir="${classes.dir}" debug="on" deprecation="off" optimize="off">
-				<classpath>
-				</classpath>
-			</javac>
-		</target>
+        <classpath>
 
-	<target name="phonegappkg" depends="">
-		<exec executable="zip">
-			<arg value="-r" />
-			<arg value="iicaptain" />
-			<arg value="www" />
-		</exec>
- <exec executable="curl">
-    <arg value="-F"/>
-    <arg value="file=@iicaptain.zip"/>
-    <arg value="-X"/>
-    <arg value="PUT"/>
-    <arg value="https://build.phonegap.com/api/v1/apps/105617?auth_token=i1c3E6MMYymBTe1Y6mBN"/>
-  </exec>
-	</target>
+            <pathelement location="lib/ant-contrib-1.0b3.jar" />
+        </classpath>
+    </taskdef>
 
-	<target name="phonegappkg-ios" depends="">
-		<copy file="phonegap/js/ios.js" tofile="www/phonegap/phonegap-1.4.1.js" overwrite="true"/>
-		<copy file="phonegap/configs/config.xml" tofile="www/config.xml" overwrite="true"/>		
-		<antcall target="phonegappkg">
-		</antcall>
-		<move file="iicaptain.zip" tofile="iicaptain-ios.zip" />
-	</target>
+    <target
+        name="phonegappkg"
+        depends="" >
 
-	<target name="phonegappkg-bb" depends="">
-		<copy file="phonegap/js/bb.js" tofile="www/phonegap/phonegap-1.4.1.js" overwrite="true"/>
-		<copy file="phonegap/configs/bb.xml" tofile="www/config.xml" overwrite="true"/>		
-		<antcall target="phonegappkg">
-		</antcall> 
-		<move file="iicaptain.zip" tofile="iicaptain-bb.zip" />
-		<exec executable="./strip.sh" />
-	</target>
+        <exec executable="zip" >
 
-	<target name="phonegappkg-android" depends="">
-		<copy file="phonegap/js/android.js" tofile="www/phonegap/phonegap-1.4.1.js" overwrite="true"/>
-		<copy file="phonegap/configs/config.xml" tofile="www/config.xml" overwrite="true"/>		
-		<antcall target="phonegappkg">
-		</antcall>
-		<move file="iicaptain.zip" tofile="iicaptain-adndroid.zip" />
- <exec executable="./android-strip.sh" />
+            <arg value="-r" />
 
-	</target>
+            <arg value="iicaptain" />
 
-	<target name="upload">
-		<exec executable="./upload.sh" />
-	</target>
-	<target name="prepare.dirs">
-		<mkdir dir="${classes.dir}" />
-		<mkdir dir="${classes.dir}/META-INF" />
-		<mkdir dir="${jars.dir}" />
-	</target>
+            <arg value="www" />
+        </exec>
 
-	<target name="clean">
-		<delete dir="${classes.dir}" />
-		<delete dir="${jars.dir}" />
-		<delete file="Tatanka.zip" />
-		<delete file="TatankaBB.zip" />
-	</target>
+        <foreach
+            list="ios,bb,android,wp7"
+            param="os"
+            target="addOSSpecifics" >
+        </foreach>
+    </target>
+
+    <target name="addOSSpecifics" >
+
+        <switch value="${os}" >
+
+            <case value="ios" >
+
+                <var
+                    name="id"
+                    value="140698" />
+            </case>
+
+            <case value="android" >
+
+                <var
+                    name="id"
+                    value="105617" />
+            </case>
+
+            <case value="bb" >
+
+                <var
+                    name="id"
+                    value="140898" />
+            </case>
+
+            <case value="wp7" >
+
+                <var
+                    name="id"
+                    value="140903" />
+            </case>
+        </switch>
+
+        <copy
+            file="iicaptain.zip"
+            tofile="iicaptain-${os}.zip" >
+        </copy>
+
+        <zip
+            basedir="phonegap/${os}"
+            destfile="iicaptain-${os}.zip"
+            update="true" >
+        </zip>
+
+        <exec executable="curl" >
+
+            <arg value="-F" />
+
+            <arg value="file=@iicaptain-${os}.zip" />
+
+            <arg value="-X" />
+
+            <arg value="PUT" />
+
+            <arg value="https://build.phonegap.com/api/v1/apps/${id}?auth_token=i1c3E6MMYymBTe1Y6mBN" />
+        </exec>
+    </target>
+
+    <target name="clean" >
+
+        <delete dir="${classes.dir}" />
+
+        <delete dir="${jars.dir}" />
+
+        <delete file="iicaptain.zip" />
+
+        <delete file="iicaptain-ios.zip" />
+
+        <delete file="iicaptain-android.zip" />
+
+        <delete file="iicaptain-bb.zip" />
+
+        <delete file="iicaptain-wp7.zip" />
+    </target>
 
 </project>
-

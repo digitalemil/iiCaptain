@@ -170,10 +170,10 @@ function loadData(url) {
 }
 
 function processReqChange() {
-    if (req.readyState != 4) 
+	  
+	if (req.readyState != 4) 
         return;
-    if (req.status != 200) 
-        return;
+    
     // ...processing statements go here...
     var response  = req.responseText;
     var obj= eval('(' + response + ')');	
