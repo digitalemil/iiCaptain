@@ -50,7 +50,6 @@
     <target
         name="phonegappkg"
         depends="prepare.dirs" >
-	<exec executable="vmc"/>
         <exec executable="zip" >
 
             <arg value="-r" />
