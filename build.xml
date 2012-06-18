@@ -15,15 +15,39 @@
         </classpath>
     </taskdef>
 
+    <property
+        name="build.dir"
+        value="build" />
+
+    <property
+        name="master-file"
+        value="iicaptain" />
+
+    <property
+        name="ios-AppID"
+        value="140698" />
+
+    <property
+        name="bb-AppID"
+        value="140898" />
+
+    <property
+        name="wp7-AppID"
+        value="140903" />
+
+    <property
+        name="android-AppID"
+        value="105617" />
+
     <target
         name="phonegappkg"
-        depends="" >
+        depends="prepare.dirs" >
 
         <exec executable="zip" >
 
             <arg value="-r" />
 
-            <arg value="iicaptain" />
+            <arg value="${build.dir}/${master-file}" />
 
             <arg value="www" />
         </exec>
@@ -35,7 +59,34 @@
         </foreach>
     </target>
 
-    <target name="addOSSpecifics" >
+    <target
+        name="upload"
+        depends="phonegappkg" >
+
+        <foreach
+            list="ios,bb,android,wp7"
+            param="os"
+            target="upload-os-pkg" >
+        </foreach>
+    </target>
+
+    <target
+        name="addOSSpecifics"
+        depends="" >
+
+        <copy
+            file="${build.dir}/${master-file}.zip"
+            tofile="${build.dir}/${master-file}-${os}.zip" >
+        </copy>
+
+        <zip
+            basedir="phonegap/${os}"
+            destfile="../${build.dir}/${master-file}-${os}.zip"
+            update="true" >
+        </zip>
+    </target>
+
+    <target name="upload-os-pkg" >
 
         <switch value="${os}" >
 
@@ -43,47 +94,36 @@
 
                 <var
                     name="id"
-                    value="140698" />
+                    value="${ios-AppID}" />
             </case>
 
             <case value="android" >
 
                 <var
                     name="id"
-                    value="105617" />
+                    value="${android-AppID}" />
             </case>
 
             <case value="bb" >
 
                 <var
                     name="id"
-                    value="140898" />
+                    value="${bb-AppID}" />
             </case>
 
             <case value="wp7" >
 
                 <var
                     name="id"
-                    value="140903" />
+                    value="${wp7-AppID}" />
             </case>
         </switch>
-
-        <copy
-            file="iicaptain.zip"
-            tofile="iicaptain-${os}.zip" >
-        </copy>
-
-        <zip
-            basedir="phonegap/${os}"
-            destfile="iicaptain-${os}.zip"
-            update="true" >
-        </zip>
 
         <exec executable="curl" >
 
             <arg value="-F" />
 
-            <arg value="file=@iicaptain-${os}.zip" />
+            <arg value="file=@${build.dir}/${master-file}-${os}.zip" />
 
             <arg value="-X" />
 
@@ -95,19 +135,12 @@
 
     <target name="clean" >
 
-        <delete dir="${classes.dir}" />
+        <delete dir="${build.dir}" />
+    </target>
 
-        <delete dir="${jars.dir}" />
+    <target name="prepare.dirs" >
 
-        <delete file="iicaptain.zip" />
-
-        <delete file="iicaptain-ios.zip" />
-
-        <delete file="iicaptain-android.zip" />
-
-        <delete file="iicaptain-bb.zip" />
-
-        <delete file="iicaptain-wp7.zip" />
+        <mkdir dir="${build.dir}" />
     </target>
 
 </project>
