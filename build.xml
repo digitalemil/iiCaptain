@@ -89,7 +89,7 @@
 
     <target
         name="test"
-        depends="compile-tests, phonegappkg" >
+        depends="compile-tests" >
 
         <junit
             haltonfailure="yes"
@@ -142,7 +142,7 @@
         </zip>
     </target>
 
-    <target name="upload-os-pkg" depends="buildAndTest">
+    <target name="upload-os-pkg" depends="">
 
         <switch value="${os}" >
 
