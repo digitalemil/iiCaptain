@@ -5,7 +5,7 @@
 <project
     name="Aye Aye Captain!"
     basedir="."
-    default="phonegappkg" >
+    default="buildAndTest" >
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" >
 
@@ -18,6 +18,14 @@
     <property
         name="build.dir"
         value="build" />
+
+    <property
+        name="tests.dir"
+        value="tests" />
+
+    <property
+        name="junit"
+        value="lib/junit-4.10.jar" />
 
     <property
         name="master-file"
@@ -60,8 +68,56 @@
     </target>
 
     <target
+        name="compile-tests"
+        depends="" >
+
+        <javac
+            debug="on"
+            deprecation="off"
+            destdir="${build.dir}/tests"
+            optimize="off"
+            source="1.5"
+            srcdir="${tests.dir}" >
+
+            <classpath>
+
+                <pathelement path="${junit}" >
+                </pathelement>
+            </classpath>
+        </javac>
+    </target>
+
+    <target
+        name="test"
+        depends="compile-tests, phonegappkg" >
+
+        <junit
+            haltonfailure="yes"
+            printsummary="yes" >
+
+            <classpath>
+
+                <pathelement location="${build.dir}/tests" />
+
+                <pathelement location="${junit}" />
+            </classpath>
+
+            <test
+                name="net.${master-file}.tests.AllTests"
+                haltonfailure="no"
+                outfile="${build.dir}/tests/results" >
+
+                <formatter type="xml" />
+            </test>
+        </junit>
+    </target>
+
+     <target
+        name="buildAndTest" depends="phonegappkg, test"/>
+     
+    <target
         name="upload"
-        depends="phonegappkg" >
+        depends="buildAndTest" >
 
         <foreach
             list="ios,bb,android,wp7"
@@ -86,7 +142,7 @@
         </zip>
     </target>
 
-    <target name="upload-os-pkg" >
+    <target name="upload-os-pkg" depends="buildAndTest">
 
         <switch value="${os}" >
 
@@ -141,6 +197,8 @@
     <target name="prepare.dirs" >
 
         <mkdir dir="${build.dir}" />
+
+        <mkdir dir="${build.dir}/tests" />
     </target>
 
 </project>
