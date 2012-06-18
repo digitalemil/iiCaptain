@@ -81,7 +81,7 @@
 
         <zip
             basedir="phonegap/${os}"
-            destfile="../${build.dir}/${master-file}-${os}.zip"
+            destfile="${build.dir}/${master-file}-${os}.zip"
             update="true" >
         </zip>
     </target>
