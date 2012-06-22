@@ -19,6 +19,7 @@ function Home() {
     this.houseswidth= 591;
     this.steg= new Sprite("res/home/steg.png", this.x+10, canvasheight-28);
 	this.ctx = canvas.getContext('2d');  
+	//this.ctx.scale(scale, scale);
 }
 
 Home.prototype.setActive= function(b) {

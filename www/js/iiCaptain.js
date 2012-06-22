@@ -11,6 +11,8 @@ var canvaswidth= 384, canvasheight= 384, tiledim= 24;
 var simple= true;
 var canvas, mapcanvas, atsea;
 var seaimg;
+var canvaswidth, canvasheight;
+var w, h, scale;
 
 var iiCaptainDisable= function() {
 	timer.stop= true;
@@ -40,7 +42,13 @@ var iiCaptainDisable= function() {
 }
 
 var iiCaptainSetup= function(id) {
-	alldiv= id;
+	w= window.innerWidth;
+    h= window.innerHeight;
+    //920, 576
+    var perfcor= 0;
+    scale = Math.min((w-perfcor*64) / 960, (h-perfcor*64) / 640);
+ //   scale= 1.0;
+    alldiv= id;
 	var bgimg= new Image();
 	bgimg.src= "res/bgimg2.png";
 	bgimg.setAttribute("id", "bgimg");
@@ -68,22 +76,20 @@ var iiCaptainSetup= function(id) {
 	id.appendChild(atsea);
 
 	canvas.setAttribute("id", "canvas");
-	canvas.setAttribute("width", canvaswidth);
-	canvas.setAttribute("height", canvasheight);
-	canvas.setAttribute("style", "position:absolute; top:"+72+"px; left: "+62+"px;");
+	canvas.setAttribute("width", canvaswidth*scale);
+	canvas.setAttribute("height", canvasheight*scale);
+	canvas.setAttribute("style", "position:absolute; top:"+72*scale+"px; left: "+62*scale+"px;");
 	mapcanvas.setAttribute("id", "mapcanvas");
-	mapcanvas.setAttribute("style", "position:absolute; top:"+80+"px; left: "+580+"px;");
-	mapcanvas.setAttribute("width", 384);
-	mapcanvas.setAttribute("height", 384);
+	mapcanvas.setAttribute("style", "position:absolute; top:"+80*scale+"px; left: "+580*scale+"px;");
+	mapcanvas.setAttribute("width", 384*scale+"px;");
+	mapcanvas.setAttribute("height", 384*scale+"px;");
 	
-	mapimg.setAttribute("style", "position:absolute; top: "+54+"px; left: "+552+"px; width:"+320+"px; height:"+220+"px;");
-	sextantimg.setAttribute("style", "position:absolute; top: "+80+"px; left: "+794+"px;");
+	mapimg.setAttribute("style", "position:absolute; top: "+54*scale+"px; left: "+552*scale+"px; width:"+320*scale+"px; height:"+220*scale+"px;");
+	sextantimg.setAttribute("style", "position:absolute; top: "+80*scale+"px; left: "+794*scale+"px;  width:"+42*scale+"px; height:"+42*scale+"px;");
 	atsea.setAttribute("id", "atsea");
-	atsea.setAttribute("width", "320px;");
-	atsea.setAttribute("height", "200px;");
-	atsea.setAttribute("style", "position:absolute; top:"+324+"px; left: "+556+"px;");
-	bgimg.setAttribute("style", "position:absolute; top:0px; left:0px; width: "+960+"px; height: "+640+"px;");
-	seaimg2.setAttribute("style", "position:absolute; top: "+16+"px; left: "+8+"px; width:"+500+"px;");
+	atsea.setAttribute("style", "position:absolute; top:"+324*scale+"px; left: "+556*scale+"px; width:"+320*scale+"px; height:"+ 200*scale+"px;");
+	bgimg.setAttribute("style", "position:absolute; top:0px; left:0px; width: "+window.innerWidth+"px; height: "+window.innerHeight+"px;");
+	seaimg2.setAttribute("style", "position:absolute; top: "+16*scale+"px; left: "+8*scale+"px; width:"+500*scale+"px;");
 
 	canvas.setAttribute("onMouseDown", "iicaptainclick(event);");
 	canvas.setAttribute("onMouseUp", "mousedown=false");
@@ -108,8 +114,11 @@ function iicaptainclick(e) {
                 event = e;
         }
       
-            var ex = event.clientX - canvas.offsetLeft- alldiv.offsetLeft + document.body.scrollLeft;
+        var ex = event.clientX - canvas.offsetLeft- alldiv.offsetLeft + document.body.scrollLeft;
         var ey = event.clientY - canvas.offsetTop- alldiv.offsetTop+  document.body.scrollTop;
+        ex/=scale;
+        ey/=scale;
+        
         var x = ex - canvaswidth / 2;
         var y = canvasheight / 2 - ey;
     
@@ -237,6 +246,8 @@ function load() {
 function init() {
    // canvas = document.getElementById("canvas");
     ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+   // scale= 1.0;
     dialog = new Dialog();
     dialog.off();
     services = new Services();
@@ -407,6 +418,7 @@ function itsNight(timer) {
     }
 }
 
+/*
 function click(e) {
     e.preventDefault();
     var event;
@@ -416,10 +428,11 @@ function click(e) {
         event = e;
     }
 
-    var ex = event.clientX - document.getElementById("canvas").offsetLeft;
-    var ey = event.clientY - document.getElementById("canvas").offsetTop;
-    var x = ex - canvaswidth / 2;
-    var y = canvasheight / 2 - ey;
+    var ex = (event.clientX - document.getElementById("canvas").offsetLeft)/scale;
+    var ey = (event.clientY - document.getElementById("canvas").offsetTop)/scale;
+    console.log("ex: "+ex+ " ey: "+ey)
+    var x = (ex - canvaswidth / 2);
+    var y = (canvasheight / 2 - ey);
     var newdir = Math.atan2(y, x);
     if (newdir < 0) {
         newdir += 2 * Math.PI;
@@ -427,4 +440,4 @@ function click(e) {
     services.getView().setCourse(newdir * 360 / 2 / Math.PI, ex, ey);
     return;
 }
-
+*/

@@ -10,7 +10,10 @@ function MapSprite() {
 	this.n;
 	this.OFFSET = 5;
 	this.mapctx= mapcanvas.getContext('2d');
+	this.mapctx.scale(scale, scale);
 	this.atseactx= atsea.getContext('2d');
+	//this.atseactx.scale(scale, scale);
+	
 	this.newWorld();
 
 	this.onload= true;
@@ -29,8 +32,9 @@ MapSprite.prototype.newWorld= function() {
 	this.discovered = 0;
 	this.sunimg= createOffScreenImage(World.currentWidth + 2 * this.OFFSET+ World.EXTENT+64, 36);
 	this.sunctx= this.sunimg.getContext('2d');
-	this.img= createOffScreenImage(World.currentWidth + 2 * this.OFFSET+ World.EXTENT+64, World.currentHeight + 2 * this.OFFSET);
+	this.img= createOffScreenImage((World.currentWidth + 2 * this.OFFSET+ World.EXTENT+64), (World.currentHeight + 2 * this.OFFSET));
 	this.ctx= this.img.getContext('2d');
+	//this.ctx.scale(scale, scale);
 	this.drawMap();
 	this.done= -1;
 }
@@ -160,7 +164,7 @@ MapSprite.prototype.setNight= function(b) {
 }
 
 MapSprite.prototype.paint= function(ctx) {
-	console.log("Map paint");
+	//console.log("Map paint");
 	var c= this.mapctx;
 	var delta= new Date().getTime()- this.daystart;
 	if (!this.visible) {
@@ -214,7 +218,7 @@ MapSprite.prototype.paint= function(ctx) {
 	else
 		c.drawImage(this.cross, x1, y1, this.cross.width/retina, this.cross.height/retina);
 		this.atseactx.drawImage(this.atsea, 0, 0, 332, 156);
-		this.atseactx.drawImage(this.atseatext, 20, 16);
+		this.atseactx.drawImage(this.atseatext, 20, 16, 192, 128);
 		this.drawNumber(this.days, 192+this.calcNumberLength(this.days, 0), 16, this.atseactx);
 		this.drawNumber(this.hull, 192+this.calcNumberLength(this.hull, 0), 82, this.atseactx);
 	}
@@ -251,7 +255,7 @@ MapSprite.prototype.drawNumber= function(d, x, y, c) {
 		d= d1;
 	} 
 	try {
-		c.drawImage(this.numbers, start[d], 0, end[d]-start[d], 38, x, y, end[d]-start[d], 38);
+		c.drawImage(this.numbers, start[d], 0, end[d]-start[d], 38, x, y, (end[d]-start[d]), 38);
 	}
 	catch(e) {
 	//	console.log(e);

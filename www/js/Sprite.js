@@ -35,7 +35,6 @@ Sprite.prototype.paint= function(ctx) {
 	if (!this.visible) {
 		return;
 	}
-	//   console.log("sprite paint");
 	ctx.drawImage(this.img, this.x, this.y); 	                
 }
 
