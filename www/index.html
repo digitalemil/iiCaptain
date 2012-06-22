@@ -45,7 +45,12 @@ canvas {
 <script language="JavaScript1.5" type="text/javascript" src="js/iiCaptain.js"></script>
 
 <script language="JavaScript1.5" type="text/javascript">
-iiCaptainSetup(document.getElementById("iiCaptain", 384, 384, 24));
+      setup= function() { 
+	       iiCaptainSetup(document.getElementById("iiCaptain", 384, 384, 24));
+     	
+            }
+    setTimeout(setup, 200);
+
 </script>
 
 </body>
