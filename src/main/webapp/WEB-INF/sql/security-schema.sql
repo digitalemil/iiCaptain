@@ -1,10 +1,10 @@
-drop table myusers;
 drop table myauthorities;
+drop table myusers;
 
 create table myusers(
       username varchar(50) not null primary key,
       password varchar(50) not null,
-      enabled boolean not null);
+      enabled int not null);
 
   create table myauthorities (
       username varchar(50) not null,

@@ -45,7 +45,7 @@
 	<!-- Maps all /accounts URLs to the 'accounts' servlet -->
 	<servlet-mapping>
 		<servlet-name>dispatcher</servlet-name>
-		<url-pattern>/say/*</url-pattern>
+		<url-pattern>/world/*</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

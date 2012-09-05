@@ -209,7 +209,6 @@ Home.prototype.move= function(timer) {
         	movecaptain= true;           
         }
         
-        
         if(movecaptain) {
             if (this.captain.x <= 36+this.x && !east) {
             	this.captain.stopWalking();

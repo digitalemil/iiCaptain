@@ -8,19 +8,14 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Hello</title>
+	<title>World created.
+	</title>
 </head>
 
 <body>
 <div id="main_wrapper">
 
-<h1>${hello}</h1>
-
-<ul>
-	<c:forEach items="${accounts}" var="account">
-		<li><a href="accountDetails?entityId=${account.entityId}">${account.name}</a></li>
-	</c:forEach>
-</ul>
+<h3>${world}</h3>
 
 </div>
 </body>

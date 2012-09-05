@@ -6,31 +6,30 @@
 		http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<!--
-<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-    <property name="jndiName" value="jdbc/MyDB"/>
-    <property name="resourceRef" value="true"/>
-</bean>
- 
+	<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> 
+		<property name="jndiName" value="jdbc/MyDB"/> <property name="resourceRef" 
+		value="true"/> </bean> <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"> 
+		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" 
+		/> <property name="url" value="jdbc:derby:born2run;create=true" /> <property 
+		name="initialSize" value="5" /> <property name="maxActive" value="50" /> 
+		</bean> -->
+
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-    <property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
-    <property name="url" value="jdbc:derby:born2run;create=true" />
-    <property name="initialSize" value="5" />
-    <property name="maxActive" value="50" />
-</bean>
--->
-	
-	
-	<jdbc:initialize-database data-source="dataSource" ignore-failures="DROPS">
-		<jdbc:script location="/WEB-INF/sql/security-schema.sql"  />
+		<property name="driverClassName"
+			value="org.springframework.jdbc.datasource.DriverManagerDataSource" />
+		<property name="url" value="jdbc:sqlfire://sqlfirehost:15281" />
+		<property name="initialSize" value="1" />
+		<property name="maxActive" value="1" />
+	</bean>
+
+	<jdbc:initialize-database data-source="dataSource"
+		ignore-failures="NONE">
+		<jdbc:script location="/WEB-INF/sql/security-schema.sql" />
 		<jdbc:script location="/WEB-INF/sql/default-users.sql" />
 	</jdbc:initialize-database>
-<!--	<cloud:data-source id="dataSource" /> 
-<jdbc:embedded-database id="dataSource" type="DERBY"> </jdbc:embedded-database>-->
-<bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
-    <property name="driverClassName" value="org.h2.Driver" />
-    <property name="url" value="jdbc:h2:mem:" />
-    <property name="username" value="sa" />
-    <property name="password" value="" />
-</bean>
+	<!-- <cloud:data-source id="dataSource" /> <jdbc:embedded-database id="dataSource" 
+		type="DERBY"> </jdbc:embedded-database> <bean class="org.apache.commons.dbcp.BasicDataSource" 
+		destroy-method="close" id="dataSource"> <property name="driverClassName" 
+		value="org.h2.Driver" /> <property name="url" value="jdbc:h2:mem:" /> <property 
+		name="username" value="sa" /> <property name="password" value="" /> </bean> -->
 </beans>

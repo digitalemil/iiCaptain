@@ -1,5 +1,6 @@
 	
-	
+// Test me.
+
 function MyRegion() {
 }  
 
@@ -449,6 +450,8 @@ NWorld.prototype.createMap= function(width,  height) {
 
 	this.createCoast(this.map, width+16, height);
 	this.creation+=20;
+	this.map.width= width;
+	this.map.height= height;
 	return this.map;
 }
 

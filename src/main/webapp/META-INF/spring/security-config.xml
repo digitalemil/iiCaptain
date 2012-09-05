@@ -11,9 +11,13 @@
 
 	<security:http access-denied-page="/denied.jsp" use-expressions="true">
 		<security:form-login login-page="/login.jsp"
-			authentication-failure-url="/login.jsp?login_error=true" />
-		<security:intercept-url pattern="/say/**" access="isAuthenticated()" />
-		<security:logout/>
+			authentication-failure-url="/login.jsp?login_error=true"  />
+		
+		
+		<!-- <security:intercept-url pattern="/world/**" access="isAuthenticated()" /> -->
+		<security:intercept-url pattern="/www/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/index.html" access="isAuthenticated()" />
+		<security:logout logout-url="/logout" logout-success-url="/logout.html"/>
 	</security:http>
 
 	<security:authentication-manager>

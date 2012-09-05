@@ -4,11 +4,10 @@
 
 	<groupId>net.iicaptain</groupId>
 	<artifactId>iicaptain</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.8.${SVN_REVISION}-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>iiCaptain</name>
-	<url>http://maven.apache.org</url>
 
 	<developers>
 		<developer>
@@ -26,6 +25,14 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<profiles>
+		<profile>
+			<id>conf</id>
+			<build>
+				<directory>${dir}</directory>
+			</build>
+		</profile>
+	</profiles>
 
 	<repositories>
 		<repository>
@@ -63,13 +70,15 @@
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.derby</groupId> <artifactId>derby</artifactId> 
-			<version>10.9.1.0</version> </dependency> -->
-		<!-- Core utilities used by other modules. Define this if you use Spring 
-			Utility APIs (org.springframework.core.*/org.springframework.util.*) -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -181,15 +190,6 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Spring MVC for Portlet Environments (depends on spring-core, spring-beans, 
-			spring-context, spring-web) Define this if you use Spring MVC with a Portlet 
-			Container (org.springframework.web.portlet.*) -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc-portlet</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-
 		<!-- Support for testing Spring applications with tools such as JUnit and 
 			TestNG This artifact is generally always defined with a 'test' scope for 
 			the integration testing framework and unit testing stubs -->
@@ -233,7 +233,14 @@
 	</dependencies>
 	<build>
 		<plugins>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.cloudfoundry</groupId>
 				<artifactId>cf-maven-plugin</artifactId>
@@ -251,6 +258,7 @@
 
 
 			<plugin>
+
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.7</version>
 				<dependencies>
@@ -267,11 +275,43 @@
 				</dependencies>
 				<executions>
 					<execution>
+						<id>provision</id>
 						<phase>package</phase>
 						<configuration>
 							<tasks>
 								<exec dir="." executable="ant" failonerror="true">
+									<arg line="vFabricApplicationDirectorDeploy" />
+									<arg line="-DWARFILE=http://172.16.227.189/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war" />
+								</exec>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<configuration>
+
+							<tasks>
+								<exec dir="." executable="ant" failonerror="true">
 									<arg line="upload" />
+									<arg line="-DSVN_REVISION=${SVN_REVISION}" />
+								</exec>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>clean</id>
+						<phase>clean</phase>
+						<configuration>
+							<tasks>
+								<exec dir="." executable="ant" failonerror="true">
+									<arg line="clean" />
 								</exec>
 							</tasks>
 						</configuration>
@@ -281,6 +321,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 	</build>
 </project>
