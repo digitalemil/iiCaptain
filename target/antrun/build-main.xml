@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <exec dir="." executable="ant" failonerror="true">
+    <arg line="vFabricApplicationDirectorDeploy"/>
+    <arg line="-DWARFILE=http://172.16.227.189/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war"/>
+  </exec>
+</target>
+</project>
