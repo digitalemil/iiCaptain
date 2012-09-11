@@ -16,7 +16,9 @@
 		
 		<!-- <security:intercept-url pattern="/world/**" access="isAuthenticated()" /> -->
 		<security:intercept-url pattern="/www/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/res/**" access="isAuthenticated()" />
 		<security:intercept-url pattern="/index.html" access="isAuthenticated()" />
+		<security:intercept-url pattern="/mobileapps.html" access="isAuthenticated()" />
 		<security:logout logout-url="/logout" logout-success-url="/logout.html"/>
 	</security:http>
 

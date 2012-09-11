@@ -12,8 +12,114 @@ var simple = true;
 var canvas, mapcanvas, atsea;
 var seaimg;
 var canvaswidth, canvasheight;
-var w, h, scale;
+var w, h, scale, sX, sY;
 var localworld= false;
+var server= localStorage.server;
+var user= localStorage.user;
+var passwd= localStorage.passwd;
+
+var startSettings= function() {
+	if(server== null)
+		server= "iicaptain.cloudfoundry.com";
+	if(user== null)
+		user= "guest";
+	if(passwd== null)
+		passwd= "guest";
+	
+	cleanStartScreen();
+	var bgimg = new Image();
+	bgimg.src = "res/start.png";
+	bgimg.setAttribute("id", "start");
+	alldiv.appendChild(bgimg);
+	
+	bgimg.setAttribute("style", "position:absolute; top:0px; left:0px; width: "
+			+ window.innerWidth + "px; height: " + window.innerHeight + "px;");
+	var userimg = new Image();
+	userimg.src = "res/yourname.png";
+	userimg.setAttribute("id", "userimg");
+	userimg.setAttribute("style", "position:absolute; top:"+ (280*sY)+"px; left:"+(((960-512-140)/2)*sX)+"px; width: "
+			+ (256*sX*1.5) + "px; height: " + (128*sY*1.5) + "px;");
+	alldiv.appendChild(userimg);	
+	
+	var ui= document.createElement("input");
+	ui.setAttribute("id", "user");
+	ui.type= "text";
+	ui.value=user;
+	ui.setAttribute("style", "position:absolute; top:"+ (360*sY)+"px; left:"+(((200+960-256)/2)*sX)+"px; width: "
+			+ (220*sX) + "px; height: " + (32*sY*1.5) + "px;");
+	alldiv.appendChild(ui);
+
+	var pimg = new Image();
+	pimg.src = "res/password.png";
+	pimg.setAttribute("id", "passwdimg");
+	pimg.setAttribute("style", "position:absolute; top:"+ (340*sY)+"px; left:"+(((960-512-180)/2)*sX)+"px; width: "
+			+ (256*sX*1.5) + "px; height: " + (128*sY*1.5) + "px;");
+	alldiv.appendChild(pimg);	
+	
+	
+	var pi= document.createElement("input");
+	pi.setAttribute("id", "passwd");
+	pi.type= "text";
+	pi.value=passwd;
+	pi.setAttribute("style", "position:absolute; top:"+ (420*sY)+"px; left:"+(((200+960-256)/2)*sX)+"px; width: "
+			+ (220*sX) + "px; height: " + (32*sY*1.5) + "px;");
+	alldiv.appendChild(pi);
+
+	var simg = new Image();
+	simg.src = "res/server.png";
+	simg.setAttribute("id", "serverimg");
+	simg.setAttribute("style", "position:absolute; top:"+ (400*sY)+"px; left:"+(((960-512-224)/2)*sX)+"px; width: "
+			+ (256*sX*1.5) + "px; height: " + (128*sY*1.5) + "px;");
+	alldiv.appendChild(simg);	
+	
+	
+	var si= document.createElement("input");
+	si.setAttribute("id", "server");
+	si.type= "text";
+	si.value=server;
+	si.setAttribute("style", "position:absolute; top:"+ (480*sY)+"px; left:"+(((200+960-256)/2)*sX)+"px; width: "
+			+ (220*sX) + "px; height: " + (32*sY*1.5) + "px;");
+	alldiv.appendChild(si);
+
+	var okimg = new Image();
+	okimg.src = "res/ok.png";
+	okimg.setAttribute("id", "okimg");
+	okimg.setAttribute("onclick", "user= document.getElementById('user').value; passwd= document.getElementById('passwd').value; server= document.getElementById('server').value; localStorage.user= user; localStorage.passwd= passwd; localStorage.server= server; cleanSettingsScreen(); iiCaptainSetup(alldiv);");
+	okimg.setAttribute("style", "position:absolute; top:"+ (520*sY)+"px; left:"+(((960+460)/2)*sX)+"px; width: "
+			+ (48*sX*1.5) + "px; height: " + (48*sY*1.5) + "px;");
+	alldiv.appendChild(okimg);	
+	
+}
+
+
+var cleanStartScreen= function() {
+	alldiv.removeChild(document.getElementById("start"));
+	alldiv.removeChild(document.getElementById("sj"));
+	alldiv.removeChild(document.getElementById("slj"));
+	alldiv.removeChild(document.getElementById("settings"));
+	alldiv.removeChild(document.getElementById("cont"));
+}
+
+var cleanSettingsScreen= function() {
+	alldiv.removeChild(document.getElementById("start"));
+	alldiv.removeChild(document.getElementById("user"));
+	alldiv.removeChild(document.getElementById("passwd"));
+	alldiv.removeChild(document.getElementById("server"));
+	alldiv.removeChild(document.getElementById("userimg"));
+	alldiv.removeChild(document.getElementById("passwdimg"));
+	alldiv.removeChild(document.getElementById("serverimg"));
+	alldiv.removeChild(document.getElementById("okimg"));
+}
+
+var startGame= function(local) {
+	if(!local && server== null && !NONAPP) {
+		alert('Please provide server details first (Under Settings).');
+		return;
+	}
+	localworld= local;
+	cleanStartScreen();
+	iiCaptainShipSetup(alldiv)
+}
 
 var iiCaptainDisable = function() {
 	timer.stop = true;
@@ -48,12 +154,68 @@ var iiCaptainSetup = function(id) {
 	// 920, 576
 	var perfcor = 0;
 	scale = Math.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
+	sX= (w - perfcor * 64) / 960;
+	sY= (h - perfcor * 64) / 640;
+	
+	alldiv = id;
+	dialog = new Dialog();
+	dialog.off();
+
+	var bgimg = new Image();
+	bgimg.src = "res/start.png";
+	bgimg.setAttribute("id", "start");
+	id.appendChild(bgimg);
+	
+	bgimg.setAttribute("style", "position:absolute; top:0px; left:0px; width: "
+			+ window.innerWidth + "px; height: " + window.innerHeight + "px;");
+
+	var cont = new Image();
+	cont.src = "res/continue.png";
+	cont.setAttribute("id", "cont");
+	cont.setAttribute("style", "position:absolute; top:"+ (360*sY)+"px; left:"+(((960-256*1.5)/2)*sX)+"px; width: "
+			+ (256*sX*1.5) + "px; height: " + (48*sY*1.5) + "px;");
+	id.appendChild(cont);	
+	var sj = new Image();
+	sj.src = "res/startjourney.png";
+	sj.setAttribute("id", "sj");
+	sj.setAttribute("onclick", "startGame(false)");	
+	sj.setAttribute("style", "position:absolute; top:"+ (410*sY)+"px; left:"+((960-256*1.5)/2)*sX+"px; width: "
+			+ (256*sX*1.5) + "px; height: " + (48*sY*1.5) + "px;");
+	id.appendChild(sj);	
+	var slj = new Image();
+	slj.src = "res/startlocaljourney.png";
+	slj.setAttribute("onclick", "startGame(true)");	
+	slj.setAttribute("id", "slj");
+	slj.setAttribute("style", "position:absolute; top:"+ (460*sY)+"px; left:"+((960-256*1.5)/2)*sX+"px; width: "
+			+ (256*sX*1.5) + "px; height: " + (48*sY*1.5) + "px;");
+	id.appendChild(slj);	
+	var settings = new Image();
+	settings.src = "res/settings.png";
+	settings.setAttribute("id", "settings");
+	settings.setAttribute("onclick", "startSettings()");	
+
+	settings.setAttribute("style", "position:absolute; top:"+ (510*sY)+"px; left:"+((960-256*1.5)/2)*sX+"px; width: "
+			+ (256*sX*1.5) + "px; height: " + (48*sY*1.5) + "px;");
+	id.appendChild(settings);	
+}
+
+var iiCaptainShipSetup = function(id) {
+	w = window.innerWidth;
+	h = window.innerHeight;
+	// 920, 576
+	var perfcor = 0;
+	scale = Math.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
 	// scale= 1.0;
 	alldiv = id;
 	var bgimg = new Image();
 	bgimg.src = "res/bgimg2.png";
 	bgimg.setAttribute("id", "bgimg");
+	bgimg.setAttribute("style", "position:absolute; top:0px; left:0px; width: "
+			+ window.innerWidth + "px; height: " + window.innerHeight + "px;");
+	
 	id.appendChild(bgimg);
+	
+	
 	seaimg = new Image();
 	var seaimg2 = new Image();
 	seaimg2.src = "res/seamap2.png";
@@ -97,8 +259,6 @@ var iiCaptainSetup = function(id) {
 	atsea.setAttribute("style", "position:absolute; top:" + 324 * scale
 			+ "px; left: " + 556 * scale + "px; width:" + 320 * scale
 			+ "px; height:" + 200 * scale + "px;");
-	bgimg.setAttribute("style", "position:absolute; top:0px; left:0px; width: "
-			+ window.innerWidth + "px; height: " + window.innerHeight + "px;");
 	seaimg2.setAttribute("style", "position:absolute; top: " + 16 * scale
 			+ "px; left: " + 8 * scale + "px; width:" + 500 * scale + "px;");
 
@@ -114,7 +274,6 @@ var iiCaptainSetup = function(id) {
 	load();
 	ship.setNight(false);
 	ship.mapSprite.paint(ctx);
-
 }
 
 // var TheRegion;
@@ -195,7 +354,6 @@ function processReqChange() {
 
 	// ...processing statements go here...
 	var response = req.responseText;
-	console.log("response: "+response);
 	var obj = eval('(' + response + ')');
 	World.map = obj.map;
 	World.currentWidth = obj.width;
@@ -221,7 +379,13 @@ function load() {
 		 * console.log(line+"]] }"); }
 		 */
 		//loadData("js/World.json");
-		loadData("../world/create?width="+dim[0]+"&height="+dim[1]+"&type=java");
+		if(NONAPP== true && (server== null || server=='')) {
+			loadData("world/create?width="+dim[0]+"&height="+dim[1]+"&type=java");
+		}
+		else {
+			if(server!= null)
+				loadData("http://"+server+"/world/create?width="+dim[0]+"&height="+dim[1]+"&type=java");
+		}
 		World.currentWidth = dim[0];
 		World.currentHeight = dim[1];
 
@@ -251,12 +415,11 @@ function load() {
 }
 
 function init() {
-	// canvas = document.getElementById("canvas");
+	 canvas = document.getElementById("canvas");
 	ctx = canvas.getContext('2d');
 	ctx.scale(scale, scale);
 	// scale= 1.0;
-	dialog = new Dialog();
-	dialog.off();
+	
 	services = new Services();
 	ship = new Ship();
 
@@ -306,10 +469,13 @@ Dialog.prototype.on = function() {
 	this.dialog.text = this.text;
 	document.body.removeChild(alldiv);
 	// document.body.removeChild(canvas);
+	this.dialog.setAttribute("style", "width: 960px; height: 640px; text-align: center");
 	document.body.appendChild(this.dialog);
 }
 
 Dialog.prototype.off = function(n1) {
+	if(document.getElementById("dialog")== null)
+		return;
 	if (this.obj == null && n1 == "simple") {
 		simple = true;
 		timer.start(256);

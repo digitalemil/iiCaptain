@@ -23,7 +23,7 @@
 	</bean>
 
 	<jdbc:initialize-database data-source="dataSource"
-		ignore-failures="NONE">
+		ignore-failures="DROPS">
 		<jdbc:script location="/WEB-INF/sql/security-schema.sql" />
 		<jdbc:script location="/WEB-INF/sql/default-users.sql" />
 	</jdbc:initialize-database>
