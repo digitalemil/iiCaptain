@@ -365,7 +365,6 @@
 						<id>provision</id>
 						<phase>package</phase>
 						<configuration>
-							<failOnError>false</failOnError>
 							<tasks>
 								<exec dir="." executable="ant" failonerror="true">
 									<arg line="vFabricApplicationDirectorDeploy" />

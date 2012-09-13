@@ -4,14 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class AppDirector {
 	
 	/**
 	 * @param args
 	 * Deploys App, waits until deployed and retrieves the IP addresses of node 'nodename'
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException {
 		// java -cp target/classes org.springsource.vfabric.tools.AppDirector 'admin' 'Vmware1!' '172.16.227.192' '5'  'iiCaptainLite' "{\"node\":[ { \"name\":\"iiCaptainLite\", \"nodeComponent\":[ { \"name\":\"iicaptain\", \"property\":[ { \"key\":\"war_file\", \"value\":\"http://172.16.227.189/iicaptain-0.8.50-SNAPSHOT.war\"} ] } ] } ] }"
 	
 		
@@ -21,6 +24,17 @@ public class AppDirector {
 		String depprofile= args[3];
 		String nodename= args[4];
 		String data1= args[5];
+		
+		InetAddress address = InetAddress.getByName(appdip);
+		
+		boolean reachable= true;
+		try {
+			 reachable= address.isReachable(10000);
+		} catch (IOException e1) {
+			reachable= false;
+		}
+		if(!reachable)
+			return;
 		
 		String execargsDeploy[]= {"curl", "--user",user+":"+passwd,"-X","POST","-H","Content-Type: application/json","-d"," "+data1+" ","--basic","-k", "https://"+appdip+":8443/darwin/api/1.0/deployment-profile/"+depprofile+"/action/deploy"};
 		
