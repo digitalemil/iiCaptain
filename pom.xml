@@ -350,6 +350,7 @@
 						<id>copywar</id>
 						<phase>package</phase>
 						<configuration>
+						<failOnError>false</failOnError>							
 							<tasks>
 								<copy file="target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war"
 									todir="/var/www">
@@ -364,7 +365,7 @@
 						<id>provision</id>
 						<phase>package</phase>
 						<configuration>
-
+							<failOnError>false</failOnError>
 							<tasks>
 								<exec dir="." executable="ant" failonerror="true">
 									<arg line="vFabricApplicationDirectorDeploy" />
