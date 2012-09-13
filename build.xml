@@ -33,9 +33,9 @@
 	</path>
 
 	<target name="phonegappkg" depends="prepare.dirs">
-		<echo message="Hello Version: ${SVN_REVISION}"/>
 		<exec executable="zip">
-
+			<arg value="--exclude=*.svn*"/>
+			
 			<arg value="-r" />
 
 			<arg value="${build.dir}/${master-file}" />
@@ -141,19 +141,18 @@
 	</target>
 
 	<target name="vFabricApplicationDirectorDeploy">
-		<exec executable="curl">
-			<arg value="--user" />
-			<arg value="admin:Vmware1!" />
-			<arg value="-X" />
-			<arg value="POST" />
-			<arg value="-v" />
-			<arg value="-H" />
-			<arg value="Content-Type: application/json" />
-			<arg value="-d" />
-			<arg value="{ &quot;node&quot;:[ { &quot;name&quot;:&quot;iiCaptainLite&quot;, &quot;nodeComponent&quot;:[ { &quot;name&quot;:&quot;iicaptain&quot;, &quot;property&quot;:[ { &quot;key&quot;:&quot;war_file&quot;, &quot;value&quot;:&quot;${WARFILE}&quot;} ] } ] } ] }" />
-			<arg value="--basic" />
-			<arg value="-k" />
-			<arg value="https://172.16.227.192:8443/darwin/api/1.0/deployment-profile/5/action/deploy" />
+		<echo>${mycp}</echo>
+		
+		<exec executable="java" output="/tmp/ip.txt">
+			<arg value="-cp"/>
+			<arg value="${mycp}"/>
+			<arg value="org.springsource.vfabric.tools.AppDirector"/>						
+			<arg value="${user}" />
+			<arg value="${passwd}" />
+			<arg value="${appdIp}" />
+			<arg value="${deploymentProfileId}" />
+			<arg value="${nodename}" />
+			<arg value="${data}" />
 		</exec>
 	</target>
 </project>

@@ -112,7 +112,8 @@ var cleanSettingsScreen= function() {
 }
 
 var startGame= function(local) {
-	if(!local && server== null && !NONAPP) {
+	console.log("NONAPP: "+NONAPP);
+	if(!local && server== null && NONAPP!= false) {
 		alert('Please provide server details first (Under Settings).');
 		return;
 	}

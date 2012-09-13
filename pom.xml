@@ -9,6 +9,23 @@
 
 	<name>iiCaptain</name>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<org.springframework.version>3.1.0.RELEASE</org.springframework.version>
+		<deploymentProfileId>5</deploymentProfileId>
+		<nodename>iiCaptainLite</nodename>
+		<user>admin</user>
+		<passwd>Vmware1!</passwd>
+		<appdIp>172.16.227.192</appdIp>
+		<svnIp>172.16.227.189</svnIp>
+		<data> '{\"node\":[ { \"name\":\"iiCaptainLite\", \"nodeComponent\":[
+			{ \"name\":\"iicaptain\", \"property\":[ { \"key\":\"war_file\",
+			\"value\":\"http://${svnIp}/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war\"} ]
+			} ] } ]}'
+		</data>
+	</properties>
+
+
 	<developers>
 		<developer>
 			<id>digitalemil</id>
@@ -24,15 +41,6 @@
 			<url>http://maven.springframework.org/milestone</url>
 		</pluginRepository>
 	</pluginRepositories>
-
-	<profiles> 
-		<profile>
-			<id>conf</id>
-			<build>
-				<directory>${dir}</directory>
-			</build>
-		</profile>
-	</profiles>
 
 	<repositories>
 		<repository>
@@ -61,13 +69,17 @@
 		</repository>
 	</repositories>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>3.1.0.RELEASE</org.springframework.version>
-	</properties>
-
-
 	<dependencies>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-api</artifactId>
+			<version>2.25.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>2.24.1</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -242,6 +254,47 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/selenium/*.java</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>unit-tests</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.12.3</version>
+				<configuration>
+					<includes>
+						<include>**/selenium/*.java</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>selenium-tests</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.cloudfoundry</groupId>
 				<artifactId>cf-maven-plugin</artifactId>
 				<version>1.0.0.M1</version>
@@ -250,8 +303,6 @@
 					<target>http://api.cloudfoundry.com</target>
 					<url>iicaptain.cloudfoundry.com</url>
 					<memory>256</memory>
-					<username>digitalemil@googlemail.com</username>
-					<password>M7496812!</password>
 					<services>iicaptain-user-db</services>
 				</configuration>
 			</plugin>
@@ -261,13 +312,13 @@
 				<executions>
 					<execution>
 						<id>copy-resources</id>
-						
+
 						<phase>compile</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${dir}/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/www</outputDirectory>
+							<outputDirectory>target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/www</outputDirectory>
 							<resources>
 								<resource>
 									<directory>www</directory>
@@ -280,7 +331,6 @@
 			</plugin>
 
 			<plugin>
-
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.7</version>
 				<dependencies>
@@ -297,14 +347,35 @@
 				</dependencies>
 				<executions>
 					<execution>
-						<id>provision</id>
+						<id>copywar</id>
 						<phase>package</phase>
 						<configuration>
 							<tasks>
+								<copy file="target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war"
+									todir="/var/www">
+								</copy>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>provision</id>
+						<phase>package</phase>
+						<configuration>
+
+							<tasks>
 								<exec dir="." executable="ant" failonerror="true">
 									<arg line="vFabricApplicationDirectorDeploy" />
+									<arg line="-Ddata=${data}" />
+									<arg line="-Duser=${user}" />
+									<arg line="-Dpasswd=${passwd}" />
+									<arg line="-DappdIp=${appdIp}" />
+									<arg line="-DdeploymentProfileId=${deploymentProfileId}" />
+									<arg line="-Dnodename=${nodename}" />
 									<arg
-										line="-DWARFILE=http://172.16.227.189/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war" />
+										line="-Dmycp=target/classes:target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/WEB-INF/lib/*" />
 								</exec>
 							</tasks>
 						</configuration>
@@ -316,7 +387,6 @@
 						<id>package</id>
 						<phase>package</phase>
 						<configuration>
-
 							<tasks>
 								<exec dir="." executable="ant" failonerror="true">
 									<arg line="upload" />
@@ -344,7 +414,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
 </project>
