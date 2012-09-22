@@ -14,9 +14,21 @@ var seaimg;
 var canvaswidth, canvasheight;
 var w, h, scale, sX, sY;
 var localworld= false;
-var server= localStorage.server;
-var user= localStorage.user;
-var passwd= localStorage.passwd;
+
+var server= "iicaptain.cloudfounfry.com"
+var user= "guest";
+var passwd= "guest";
+var vita= false;
+		 if(navigator.userAgent.match(".*Vita.*")){
+    	scale= 1;
+    	sx= sy= 1;
+    	vita= true;
+    	}
+    	else {
+    	server= localStorage.server;
+    	user=localStorage.user;
+    	passwd= localStorage.passwd;
+    	}
 
 var startSettings= function() {
 	if(server== null)
@@ -84,7 +96,7 @@ var startSettings= function() {
 	var okimg = new Image();
 	okimg.src = "res/ok.png";
 	okimg.setAttribute("id", "okimg");
-	okimg.setAttribute("onclick", "user= document.getElementById('user').value; passwd= document.getElementById('passwd').value; server= document.getElementById('server').value; localStorage.user= user; localStorage.passwd= passwd; localStorage.server= server; cleanSettingsScreen(); iiCaptainSetup(alldiv);");
+	okimg.setAttribute("onclick", "user= document.getElementById('user').value; passwd= document.getElementById('passwd').value; server= document.getElementById('server').value; if(!vita) {localStorage.user= user; localStorage.passwd= passwd; localStorage.server= server; }cleanSettingsScreen(); iiCaptainSetup(alldiv);");
 	okimg.setAttribute("style", "position:absolute; top:"+ (520*sY)+"px; left:"+(((960+460)/2)*sX)+"px; width: "
 			+ (48*sX*1.5) + "px; height: " + (48*sY*1.5) + "px;");
 	alldiv.appendChild(okimg);	
@@ -150,6 +162,7 @@ var iiCaptainDisable = function() {
 }
 
 var iiCaptainSetup = function(id) {
+
 	w = window.innerWidth;
 	h = window.innerHeight;
 	// 920, 576
@@ -157,7 +170,11 @@ var iiCaptainSetup = function(id) {
 	scale = Math.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
 	sX= (w - perfcor * 64) / 960;
 	sY= (h - perfcor * 64) / 640;
-	
+		 if(navigator.userAgent.match(".*Vita.*")){
+    	scale= 1;
+    	sx= sy= 1;
+    	vita= true;
+ }
 	alldiv = id;
 	dialog = new Dialog();
 	dialog.off();
@@ -190,6 +207,7 @@ var iiCaptainSetup = function(id) {
 	slj.setAttribute("style", "position:absolute; top:"+ (460*sY)+"px; left:"+((960-256*1.5)/2)*sX+"px; width: "
 			+ (256*sX*1.5) + "px; height: " + (48*sY*1.5) + "px;");
 	id.appendChild(slj);	
+	
 	var settings = new Image();
 	settings.src = "res/settings.png";
 	settings.setAttribute("id", "settings");
@@ -207,6 +225,11 @@ var iiCaptainShipSetup = function(id) {
 	var perfcor = 0;
 	scale = Math.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
 	// scale= 1.0;
+	 if(navigator.userAgent.match(".*Vita.*")){
+    	scale= 1;
+    	vita= true;
+ }
+   
 	alldiv = id;
 	var bgimg = new Image();
 	bgimg.src = "res/bgimg2.png";
@@ -271,7 +294,13 @@ var iiCaptainShipSetup = function(id) {
 			"services.getView().mapSprite.navigate();");
 	mapcanvas.setAttribute("ontouchstart",
 			"services.getView().mapSprite.navigate();");
+ 
+		if(vita) {
+	sextantimg.setAttribute("style", "position:absolute; top: "+80*scale+"px; left: "+812*scale+"px;  width:"+42*scale+"px; height:"+42*scale+"px;");
+	mapimg.setAttribute("style", "position:absolute; top: "+54*scale+"px; left: "+552*scale+"px; width:"+340*scale+"px; height:"+240*scale+"px;");
+	seaimg2.setAttribute("style", "position:absolute; top: "+16*scale+"px; left: "+8*scale+"px; width:"+548*scale+"px;");
 
+}
 	load();
 	ship.setNight(false);
 	ship.mapSprite.paint(ctx);
