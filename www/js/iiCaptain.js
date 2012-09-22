@@ -15,7 +15,7 @@ var canvaswidth, canvasheight;
 var w, h, scale, sX, sY;
 var localworld= false;
 
-var server= "iicaptain.cloudfounfry.com"
+var server= "iicaptain.cloudfoundry.com"
 var user= "guest";
 var passwd= "guest";
 var vita= false;
