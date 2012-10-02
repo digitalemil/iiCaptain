@@ -5,15 +5,12 @@
 <body bgcolor="#482100">
 	<div id="alldiv">
 		<img id="start" src="openres/start.png">
-		<img src="res/comeback.png" id="comeback" onclick="document.location='index.html'"/>
-		<img src="res/ios.png" id="iosqr">
-		<img src="res/android.png" id="androidqr">
-		<img src="res/blackberry.png" id="blackberryqr">
-		<img src="res/windowsmobile.png" id="windowsmobileqr">
-		<img src="res/iosl.png" id="ios" onclick="document.location='https://build.phonegap.com/apps/140698/share'">
-		<img src="res/androidl.png" id="android" onclick="document.location='https://build.phonegap.com/apps/105617/share'">
-		<img src="res/blackberryl.png" id="blackberry" onclick="document.location='https://build.phonegap.com/apps/140898/share'">
-		<img src="res/windowsmobilel.png" id="windowsmobile" onclick="document.location='https://build.phonegap.com/apps/140903/share'">		
+		<img src="openres/comeback.png" id="comeback" onclick="document.location='index.html'"/>
+		<img src="openres/phonegapqr.png" id="phonegapqr">
+		<img src="res/iosl.png" id="ios" onclick="document.location=https://build.phonegap.com/apps/213286/share'">
+		<img src="res/androidl.png" id="android" onclick="document.location='https://build.phonegap.com/apps/213286/share'">
+		<img src="res/blackberryl.png" id="blackberry" onclick="document.location='https://build.phonegap.com/apps/213286/share'">
+		<img src="res/windowsmobilel.png" id="windowsmobile" onclick="document.location='https://build.phonegap.com/apps/213286/share'">		
 	</div>
 	<script>
 		var w = window.innerWidth;
@@ -36,27 +33,11 @@
 				+ "px; height: " + (128 * sY * 2) + "px;");
 
 		
-		img = document.getElementById("iosqr");
+		img = document.getElementById("phonegapqr");
 		img.setAttribute("style", "position:absolute; top:" + (380 * sY)
-				+ "px; left:" + (120 * sX) + "px; width: " + (128 * scale )
+				+ "px; left:" + ((w-128 * sX)/2) + "px; width: " + (128 * scale )
 				+ "px; height: " + (128 * scale) + "px;");
 
-		img = document.getElementById("androidqr");
-		img.setAttribute("style", "position:absolute; top:" + (380 * sY)
-				+ "px; left:" + (320 * sX) + "px; width: " + (128 * scale )
-				+ "px; height: " + (128 * scale) + "px;");
-
-		
-		img = document.getElementById("blackberryqr");
-		img.setAttribute("style", "position:absolute; top:" + (380 * sY)
-				+ "px; left:" + (520 * sX) + "px; width: " + (128 * scale )
-				+ "px; height: " + (128 * scale) + "px;");
-
-		
-		img = document.getElementById("windowsmobileqr");
-		img.setAttribute("style", "position:absolute; top:" + (380 * sY)
-				+ "px; left:" + (720 * sX) + "px; width: " + (128 * scale )
-				+ "px; height: " + (128 * scale) + "px;");
 		
 		img = document.getElementById("ios");
 		img.setAttribute("style", "position:absolute; top:" + (480 * sY)

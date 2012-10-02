@@ -12,11 +12,12 @@ public class AppDirector {
 	/**
 	 * @param args
 	 * Deploys App, waits until deployed and retrieves the IP addresses of node 'nodename'
-	 * @throws UnknownHostException 
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws UnknownHostException {
+	public static void main(String[] args) throws IOException {
 		// java -cp target/classes org.springsource.vfabric.tools.AppDirector 'admin' 'Vmware1!' '172.16.227.192' '5'  'iiCaptainLite' "{\"node\":[ { \"name\":\"iiCaptainLite\", \"nodeComponent\":[ { \"name\":\"iicaptain\", \"property\":[ { \"key\":\"war_file\", \"value\":\"http://172.16.227.189/iicaptain-0.8.50-SNAPSHOT.war\"} ] } ] } ] }"
 	
+		// Added Comment
 		
 		String user= args[0];
 		String passwd= args[1];
@@ -35,6 +36,7 @@ public class AppDirector {
 		}
 		if(!reachable)
 			return;
+		
 		
 		String execargsDeploy[]= {"curl", "--user",user+":"+passwd,"-X","POST","-H","Content-Type: application/json","-d"," "+data1+" ","--basic","-k", "https://"+appdip+":8443/darwin/api/1.0/deployment-profile/"+depprofile+"/action/deploy"};
 		
@@ -79,11 +81,12 @@ public class AppDirector {
 		
 	}
 	
-	private static String exec(String args[]) {
+	public static String exec(String args[]) throws IOException {
 		ProcessBuilder pb = new ProcessBuilder( args);
 		Process process= null;
 		try {
 			process = pb.start();
+			
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -92,7 +95,7 @@ public class AppDirector {
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
 		StringBuffer out= new StringBuffer();
-		String line;
+		String line= "";
 		
 		try {
 			while ((line = br.readLine()) != null) {
@@ -100,6 +103,12 @@ public class AppDirector {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally {
+			is.close();
+			process.getOutputStream().close();
+			process.getErrorStream();
+			process.destroy();
 		}
 		return out.toString();
 	}

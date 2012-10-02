@@ -6,7 +6,7 @@
 	<artifactId>iicaptain</artifactId>
 	<version>0.8.${SVN_REVISION}-SNAPSHOT</version>
 	<packaging>war</packaging>
-
+<!--  -->
 	<name>iiCaptain</name>
 
 	<properties>
@@ -17,10 +17,14 @@
 		<user>admin</user>
 		<passwd>Vmware1!</passwd>
 		<appdIp>172.16.227.192</appdIp>
+		<apmuser>admin</apmuser>
+		<apmpasswd>vmware1!</apmpasswd>
+		<apmIp>172.16.227.159</apmIp>
 		<svnIp>172.16.227.189</svnIp>
 		<data> '{\"node\":[ { \"name\":\"iiCaptainLite\", \"nodeComponent\":[
 			{ \"name\":\"iicaptain\", \"property\":[ { \"key\":\"war_file\",
-			\"value\":\"http://${svnIp}/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war\"} ]
+			\"value\":\"http://${svnIp}/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war\"}
+			]
 			} ] } ]}'
 		</data>
 	</properties>
@@ -90,6 +94,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -274,26 +279,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.12.3</version>
-				<configuration>
-					<includes>
-						<include>**/selenium/*.java</include>
-					</includes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>selenium-tests</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+
 			<plugin>
 				<groupId>org.cloudfoundry</groupId>
 				<artifactId>cf-maven-plugin</artifactId>
@@ -321,7 +307,7 @@
 							<outputDirectory>target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/www</outputDirectory>
 							<resources>
 								<resource>
-									<directory>www</directory>
+									<directory>src/main/www</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
@@ -350,7 +336,7 @@
 						<id>copywar</id>
 						<phase>package</phase>
 						<configuration>
-						<failOnError>false</failOnError>							
+							<failOnError>false</failOnError>
 							<tasks>
 								<copy file="target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war"
 									todir="/var/www">
@@ -384,12 +370,48 @@
 						</goals>
 					</execution>
 					<execution>
+						<id>createAppInAPM</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<tasks>
+								<exec dir="." executable="ant" failonerror="true">
+									<arg line="vFabricAPMCreateApp" />
+									<arg line="-Dapmuser=${apmuser}" />
+									<arg line="-Dapmpasswd=${apmpasswd}" />
+									<arg line="-DapmIp=${apmIp}" />
+									<arg line="-Dappname=${project.name}-0.8.${SVN_REVISION}" />
+									<arg line="-Ddescription=Release:0.8.${SVN_REVISION}-SNAPSHOT" />
+									<arg
+										line="-Dmycp=target/classes:target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/WEB-INF/lib/*" />
+								</exec>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>JMeterTests</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<tasks>
+								<exec dir="." executable="ant" failonerror="true">
+									<arg line="JMeter" />
+								</exec>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
 						<id>package</id>
 						<phase>package</phase>
 						<configuration>
 							<tasks>
 								<exec dir="." executable="ant" failonerror="true">
-									<arg line="upload" />
+								<!-- 	<arg line="-Ddevtype=bb" /> -->
+									<arg line="phonegap" />
 									<arg line="-DSVN_REVISION=${SVN_REVISION}" />
 								</exec>
 							</tasks>
@@ -410,6 +432,27 @@
 						</configuration>
 						<goals>
 							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.12.3</version>
+				<configuration>
+					<includes>
+						<include>**/selenium/*.java</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>selenium-tests</id>
+						<phase>package</phase>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
 						</goals>
 					</execution>
 				</executions>

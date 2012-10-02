@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns:gap="http://phonegap.com/ns/1.0" id="iiCaptain"
+	version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
+
+	<name>
+		iiCaptain
+	</name>
+
+	<description>
+		Discover new worlds!
+	</description>
+
+	<author email="digitalemil@googlemail.com" href="http://digitalemil.de">
+		Emil A. Siemes
+	</author>
+
+	<preference name="phonegap-version" value="2.0.0" />
+
+	<gap:platforms>
+		<gap:platform name="ios" />
+		<gap:platform name="android" minVersion="2.1" />
+	</gap:platforms>
+
+	<icon height="57" src="icons/icon-iphone-57.png" width="57" />
+
+	<icon height="72" src="icons/icon-iphone-72.png" width="72" />
+
+	<icon height="114" src="icons/icon-iphone-114.png" width="114" />
+
+	<icon height="144" src="icons/icon-iphone-144.png" width="144" />
+	<icon src="icons/icon-android-36.png" width="36" height="36" />
+	<icon src="icons/icon-android-48.png" width="48" height="48" />
+	<icon src="icons/icon-android-72.png" width="72" height="72" />
+
+	<gap:splash src="splashes/Default.png" />
+	<gap:splash height="768" src="splashes/Default-Landscape~ipad.png"
+		width="1024" />
+	<gap:splash src="splash/Default.png" gap:platform="android"
+		gap:density="ldpi" />
+	<gap:splash src="splash/Default.png" gap:platform="android"
+		gap:density="mdpi" />
+	<gap:splash src="splash/Default.png" gap:platform="android"
+		gap:density="hdpi" />
+	<gap:splash src="splash/Default.png" gap:platform="blackberry" />
+	<gap:splash src="splash/Default.png" gap:platform="winphone" />
+	
+	<feature name="http://api.phonegap.com/1.0/notification" />
+	<feature name="http://api.phonegap.com/1.0/network" />
+
+	<preference name="disable-cursor" value="true" />
+
+	<preference name="fullscreen" value="true" />
+
+	<preference name="orientation" value="landscape" />
+
+</widget>
