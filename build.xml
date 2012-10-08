@@ -21,14 +21,14 @@
 
 	<property name="appId" value="213286" />
 
-	<property name="www.dir" value="www" />
+	<property name="www.dir" value="src/main/www" />
 
 	<switch value="${devtype}">
 		<case value="bb">
-			<var name="www" value="${www.dir}-bb" />
+			<var name="www" value="www-bb" />
 		</case>
 		<default>
-			<var name="www" value="${www.dir}" />
+			<var name="www" value="www" />
 		</default>
 	</switch>
 
@@ -55,7 +55,7 @@
 				<exec executable="sed" output="${www.dir}/index.html">
 					<arg value="-e" />
 					<arg value="s/isbb = false/isbb=true/" />
-					<arg value="${src.dir}/index.html" />
+					<arg value="${www.dir}/index.html" />
 				</exec>
 				<delete>
 					<fileset dir="${www}/splashes">
@@ -71,7 +71,7 @@
 	</target>
 
 	<target name="clean">
-		<delete dir="${www.dir}" />
+		<delete dir="${www}" />
 		<delete dir="${build.dir}" />
 	</target>
 
