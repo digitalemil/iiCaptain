@@ -20,8 +20,8 @@ function Ship() {
 	this.captain= new Captain2Sprite((canvaswidth-26)/2, (canvasheight-48)/2);
 	this.captain.visible= false;
 	this.ship= new ShipSprite(this);
-	this.gundeck= new Gundeck((canvaswidth-256)/2, 8);
-	this.gundeck.setVisible(false);	
+	//this.gundeck= new Gundeck((canvaswidth-256)/2, 8);
+	//this.gundeck.setVisible(false);	
 	this.sea= null;
 	this.map= null;
 	this.tx= -1; 
@@ -556,7 +556,7 @@ Ship.prototype.paint= function() {
 			this.mapSprite.paint(ctx);				 
 		}
 		if(this.onboard) {
-			this.gundeck.paint(ctx);
+	//		this.gundeck.paint(ctx);
 		}     
 		else {
 			this.captain.paint(ctx);
@@ -564,7 +564,7 @@ Ship.prototype.paint= function() {
 		if(this.night) {
 		//	ctx.fillStyle   = '#000000';
 			//ctx.strokeStyle = '#000000';
-			ctx.drawImage(nightimg, (canvaswidth- nightimg.width)/2, (canvasheight- nightimg.height)/2, nightimg.width, nightimg.height); 	   
+			ctx.drawImage(nightimg, (canvaswidth- nightimg.width)/2-1, (canvasheight- nightimg.height)/2-1, nightimg.width+2, nightimg.height+2); 	   
 			ctx.fillRect(0, 0, (canvaswidth- nightimg.width)/2, canvasheight);
 			ctx.fillRect((canvaswidth- (canvaswidth- nightimg.width)/2), 0, (canvaswidth- nightimg.width)/2, canvasheight);
 			ctx.fillRect(0, 0, canvaswidth, (canvasheight- nightimg.height)/2);

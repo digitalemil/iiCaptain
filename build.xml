@@ -37,7 +37,7 @@
 			<arg value="/tmp/iiCaptain-s-Ship" />
 			<arg value="${www}" />
 			<arg value="${appId}" />
-			<arg value="digitalemil@googlemail.com:" />
+			<arg value="digitalemil@googlemail.com:Mm7496812abc" />
 			<arg value="https://github.com/digitalemil/Captain-s-Ship.git" />
 		</exec>
 	</target>

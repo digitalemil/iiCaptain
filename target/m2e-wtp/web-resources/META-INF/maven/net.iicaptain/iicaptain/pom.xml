@@ -6,14 +6,35 @@
 	<artifactId>iicaptain</artifactId>
 	<version>0.8.${SVN_REVISION}-SNAPSHOT</version>
 	<packaging>war</packaging>
-
+<!--  -->
 	<name>iiCaptain</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<org.springframework.version>3.1.0.RELEASE</org.springframework.version>
+		<deploymentProfileId>5</deploymentProfileId>
+		<nodename>iiCaptainLite</nodename>
+		<user>admin</user>
+		<passwd>Vmware1!</passwd>
+		<appdIp>172.16.227.192</appdIp>
+		<apmuser>admin</apmuser>
+		<apmpasswd>vmware1!</apmpasswd>
+		<apmIp>172.16.227.159</apmIp>
+		<svnIp>172.16.227.189</svnIp>
+		<data> '{\"node\":[ { \"name\":\"iiCaptainLite\", \"nodeComponent\":[
+			{ \"name\":\"iicaptain\", \"property\":[ { \"key\":\"war_file\",
+			\"value\":\"http://${svnIp}/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war\"}
+			]
+			} ] } ]}'
+		</data>
+	</properties>
+
 
 	<developers>
 		<developer>
 			<id>digitalemil</id>
 			<name>Emil A. Siemes</name>
-			<email>digitalemil at googlemail.com</email>
+			<email>digitalemil at googlemail.com </email>
 		</developer>
 	</developers>
 
@@ -24,15 +45,6 @@
 			<url>http://maven.springframework.org/milestone</url>
 		</pluginRepository>
 	</pluginRepositories>
-
-	<profiles>
-		<profile>
-			<id>conf</id>
-			<build>
-				<directory>${dir}</directory>
-			</build>
-		</profile>
-	</profiles>
 
 	<repositories>
 		<repository>
@@ -61,13 +73,17 @@
 		</repository>
 	</repositories>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>3.1.0.RELEASE</org.springframework.version>
-	</properties>
-
-
 	<dependencies>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-api</artifactId>
+			<version>2.25.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>2.24.1</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -78,6 +94,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -242,6 +259,28 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/selenium/*.java</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>unit-tests</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>org.cloudfoundry</groupId>
 				<artifactId>cf-maven-plugin</artifactId>
 				<version>1.0.0.M1</version>
@@ -250,15 +289,34 @@
 					<target>http://api.cloudfoundry.com</target>
 					<url>iicaptain.cloudfoundry.com</url>
 					<memory>256</memory>
-					<username>digitalemil@googlemail.com</username>
-					<password>M7496812!</password>
 					<services>iicaptain-user-db</services>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
 
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/www</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/www</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
-
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.7</version>
 				<dependencies>
@@ -275,13 +333,70 @@
 				</dependencies>
 				<executions>
 					<execution>
+						<id>copywar</id>
+						<phase>package</phase>
+						<configuration>
+							<failOnError>false</failOnError>
+							<tasks>
+								<copy file="target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war"
+									todir="/var/www">
+								</copy>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
 						<id>provision</id>
 						<phase>package</phase>
 						<configuration>
 							<tasks>
 								<exec dir="." executable="ant" failonerror="true">
 									<arg line="vFabricApplicationDirectorDeploy" />
-									<arg line="-DWARFILE=http://172.16.227.189/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war" />
+									<arg line="-Ddata=${data}" />
+									<arg line="-Duser=${user}" />
+									<arg line="-Dpasswd=${passwd}" />
+									<arg line="-DappdIp=${appdIp}" />
+									<arg line="-DdeploymentProfileId=${deploymentProfileId}" />
+									<arg line="-Dnodename=${nodename}" />
+									<arg
+										line="-Dmycp=target/classes:target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/WEB-INF/lib/*" />
+								</exec>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>createAppInAPM</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<tasks>
+								<exec dir="." executable="ant" failonerror="true">
+									<arg line="vFabricAPMCreateApp" />
+									<arg line="-Dapmuser=${apmuser}" />
+									<arg line="-Dapmpasswd=${apmpasswd}" />
+									<arg line="-DapmIp=${apmIp}" />
+									<arg line="-Dappname=${project.name}-0.8.${SVN_REVISION}" />
+									<arg line="-Ddescription=Release:0.8.${SVN_REVISION}-SNAPSHOT" />
+									<arg
+										line="-Dmycp=target/classes:target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/WEB-INF/lib/*" />
+								</exec>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>JMeterTests</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<tasks>
+								<exec dir="." executable="ant" failonerror="true">
+									<arg line="JMeter" />
 								</exec>
 							</tasks>
 						</configuration>
@@ -293,10 +408,10 @@
 						<id>package</id>
 						<phase>package</phase>
 						<configuration>
-
 							<tasks>
 								<exec dir="." executable="ant" failonerror="true">
-									<arg line="upload" />
+								<!-- 	<arg line="-Ddevtype=bb" /> -->
+									<arg line="phonegap" />
 									<arg line="-DSVN_REVISION=${SVN_REVISION}" />
 								</exec>
 							</tasks>
@@ -320,8 +435,28 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
 
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.12.3</version>
+				<configuration>
+					<includes>
+						<include>**/selenium/*.java</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>selenium-tests</id>
+						<phase>package</phase>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
