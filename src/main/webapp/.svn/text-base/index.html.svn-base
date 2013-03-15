@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>iiCaptain</title>
+</head>
+
+<body bgcolor="#482100">
+	<div id="alldiv">
+		<iframe id="iframe" seamless src="www/index.html?NONAPP=true" name="iicaptain"
+			id="iicaptain"></iframe>
+		<img id="mobileapps" src="res/mobileapps.png" onclick="document.location= 'mobileapps.html'"></img> <img id="help"
+			src="res/help.png" onclick="alert('Coming soon')"></img> <img id="logout" src="res/logout.png" onclick="document.location='logout'"></img>
+	</div>
+	<script>
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+		var perfcor = 0;
+		var scale = Math
+				.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
+		var sX = (w - perfcor * 64) / 960;
+		var sY = (h - perfcor * 64) / 640;
+
+		var iframe = document.getElementById("iframe");
+		iframe.setAttribute("style",
+				"position:absolute; top:0px; left:0px; width: "
+						+ window.innerWidth + "px; height: "
+						+ window.innerHeight + "px;");
+		
+		var img = document.getElementById("help");
+		img.setAttribute("style", "position:absolute; top:" + (-64 * sY)
+				+ "px; left:" + (0 * sX) + "px; width: " + (256 * sX * 1.5)
+				+ "px; height: " + (128 * sY * 1.5) + "px;");
+		
+		img = document.getElementById("mobileapps");
+		img.setAttribute("style", "position:absolute; top:" + (-64 * sY)
+				+ "px; left:" + ((960-256*1.5)/2 * sX) + "px; width: " + (256 * sX * 1.5)
+				+ "px; height: " + (128 * sY * 1.5) + "px;");
+		
+		img = document.getElementById("logout");
+		img.setAttribute("style", "position:absolute; top:" + (-64 * sY)
+				+ "px; left:" + ((960-256*1.5) * sX) + "px; width: " + (256 * sX * 1.5)
+				+ "px; height: " + (128 * sY * 1.5) + "px;");
+	</script>
+</body>
+</html>

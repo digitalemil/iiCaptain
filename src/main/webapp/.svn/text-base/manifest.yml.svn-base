@@ -1,0 +1,16 @@
+--- 
+applications: 
+  .: 
+    name: iicaptain
+    instances: 1
+    framework: 
+      name: spring
+      info: 
+        exec: 
+        description: Java SpringSource Spring Application
+        mem: 512M
+    url: ${name}.${target-base}
+    services: 
+      iicaptain-user-db: 
+        type: mysql
+    mem: 512M

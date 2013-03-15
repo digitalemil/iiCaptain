@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>iiCaptain</title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="user-scalable=no, width=device-width,  initial-scale=0.5, minimum-scale=0.5,  maximum-scale=2"/>
+<style>
+* {
+	-webkit-user-drag: none;
+	-webkit-touch-callout: none;
+	/* prevent callout to copy image, etc when tap to hold */
+	-webkit-text-size-adjust: none;
+	/* prevent webkit from resizing text to fit */
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	/* make transparent link [ remove highlighting ] selection, adjust last value opacity 0 to 1.0 */
+}
+</style>
+<style>
+canvas {
+	border: 0px solid black;
+}
+</style>
+
+</head>
+<style type="text/css"> 
+a:link {font-family:'Zapfino'; font-weight:bold; text-decoration: none; color: white;}
+a:visited { font-family:'Zapfino'; font-weight:bold; color:white; text-decoration:none; }
+a:focus { font-family:'Zapfino'; font-weight:bold; color:white; text-decoration:underline; }
+a:hover { font-family:'Zapfino'; font-weight:bold; color:white; text-decoration:none; }
+a:active { font-family:'Zapfino'; font-weight:bold; color:white; text-decoration:underline; }
+</style>
+<style type="text/css">p { font-family:'Zapfino'; font-weight:bold; text-decoration: none; color: white;}"></style>
+<body bgcolor="#482100">
+	<div align="center" style="color: white;">
+		<img id="start" src="openres/start.png"> 
+		<img id= "comeback" src="openres/comeback.png" onclick="document.location='index.html'"/>
+	</div>
+	
+	<script>
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+		var perfcor = 0;
+		var scale = Math
+				.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
+		var sX = (w - perfcor * 64) / 960;
+		var sY = (h - perfcor * 64) / 640;
+
+		var img = document.getElementById("start");
+		img.setAttribute("style",
+				"position:absolute; top:0px; left:0px; width: "
+						+ window.innerWidth + "px; height: "
+						+ window.innerHeight + "px;");
+
+		img = document.getElementById("comeback");
+		img.setAttribute("style", "position:absolute; top:" + (-64 * sY)
+				+ "px; left:" + (40 * sX) + "px; width: " + (256 * sX * 2)
+				+ "px; height: " + (128 * sY * 2) + "px;");
+	</script>
+</body>
+</html>

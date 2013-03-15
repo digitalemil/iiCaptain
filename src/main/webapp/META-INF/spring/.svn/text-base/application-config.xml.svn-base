@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int-gfe="http://www.springframework.org/schema/integration/gemfire"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/integration/gemfire http://www.springframework.org/schema/integration/gemfire/spring-integration-gemfire.xsd">
+
+
+	<import resource="security-config.xml" />
+
+	<import resource="infrastructure-config.xml" />
+
+	<import resource="hadoop.xml" />
+	
+	<context:component-scan base-package="net.iicaptain.homeport.impl"></context:component-scan>
+
+	<bean id="creator" class="net.iicaptain.homeport.impl.CreatorServiceImpl">
+		<property name="pathToJSFile" value="/js/Creator.js"></property>
+	</bean>
+	
+	<int-gfe:outbound-channel-adapter id="locationsToGem"
+		region="iicaptainLocations" />
+
+	<int-gfe:outbound-channel-adapter id="worldsToGem"
+		region="iicaptainWorlds" />
+</beans>

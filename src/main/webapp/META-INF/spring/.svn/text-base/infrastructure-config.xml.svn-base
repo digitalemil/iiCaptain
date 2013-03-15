@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:cloud="http://schema.cloudfoundry.org/spring" xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+		http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/gemfire http://www.springframework.org/schema/gemfire/spring-gemfire.xsd">
+
+	<gfe:client-cache id="gemfireCache" />
+
+	<gfe:pool id="pool" subscription-enabled="true">
+		<gfe:locator host="server1" port="44441" />
+		<gfe:locator host="server2" port="44441" />
+	</gfe:pool>
+
+	<gfe:client-region id="iicaptainWorlds" name="iicaptainWorlds"
+		pool-name="pool" shortcut="CACHING_PROXY">
+	</gfe:client-region>
+
+	<gfe:client-region id="iicaptainLocations" name="iicaptainLocations"
+		pool-name="pool" shortcut="CACHING_PROXY">
+	</gfe:client-region>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName"
+			value="org.springframework.jdbc.datasource.DriverManagerDataSource" />
+		<property name="url" value="jdbc:sqlfire://sqlfirehost:15281" />
+		<property name="initialSize" value="1" />
+		<property name="maxActive" value="1" />
+	</bean>
+
+	<jdbc:initialize-database data-source="dataSource"
+		ignore-failures="DROPS">
+		<jdbc:script location="/WEB-INF/sql/security-schema.sql" />
+		<jdbc:script location="/WEB-INF/sql/default-users.sql" />
+	</jdbc:initialize-database>
+</beans>

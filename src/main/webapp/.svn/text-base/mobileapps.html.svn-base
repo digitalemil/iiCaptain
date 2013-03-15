@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>iiCaptain</title>
+</head>
+
+<body bgcolor="#482100">
+	<div id="alldiv">
+		<img id="start" src="openres/start.png">
+		<img src="openres/comeback.png" id="comeback" onclick="document.location='index.html'"/>
+		<img src="openres/phonegapqr.png" id="phonegapqr">
+		<img src="res/iosl.png" id="ios" onclick="document.location=https://build.phonegap.com/apps/213286/share'">
+		<img src="res/androidl.png" id="android" onclick="document.location='https://build.phonegap.com/apps/213286/share'">
+		<img src="res/blackberryl.png" id="blackberry" onclick="document.location='https://build.phonegap.com/apps/213286/share'">
+		<img src="res/windowsmobilel.png" id="windowsmobile" onclick="document.location='https://build.phonegap.com/apps/213286/share'">		
+	</div>
+	<script>
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+		var perfcor = 0;
+		var scale = Math
+				.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
+		var sX = (w - perfcor * 64) / 960;
+		var sY = (h - perfcor * 64) / 640;
+
+		var img = document.getElementById("start");
+		img.setAttribute("style",
+				"position:absolute; top:0px; left:0px; width: "
+						+ window.innerWidth + "px; height: "
+						+ window.innerHeight + "px;");
+
+		img = document.getElementById("comeback");
+		img.setAttribute("style", "position:absolute; top:" + (-64 * sY)
+				+ "px; left:" + (40 * sX) + "px; width: " + (256 * sX * 2)
+				+ "px; height: " + (128 * sY * 2) + "px;");
+
+		
+		img = document.getElementById("phonegapqr");
+		img.setAttribute("style", "position:absolute; top:" + (380 * sY)
+				+ "px; left:" + ((w-128 * sX)/2) + "px; width: " + (128 * scale )
+				+ "px; height: " + (128 * scale) + "px;");
+
+		
+		img = document.getElementById("ios");
+		img.setAttribute("style", "position:absolute; top:" + (480 * sY)
+				+ "px; left:" + (120 * sX) + "px; width: " + (128 * scale )
+				+ "px; height: " + (128 * scale) + "px;");
+
+		img = document.getElementById("android");
+		img.setAttribute("style", "position:absolute; top:" + (480 * sY)
+				+ "px; left:" + (320 * sX) + "px; width: " + (128 * scale )
+				+ "px; height: " + (128 * scale) + "px;");
+
+		
+		img = document.getElementById("blackberry");
+		img.setAttribute("style", "position:absolute; top:" + (480 * sY)
+				+ "px; left:" + (520 * sX) + "px; width: " + (128 * scale )
+				+ "px; height: " + (128 * scale) + "px;");
+
+		
+		img = document.getElementById("windowsmobile");
+		img.setAttribute("style", "position:absolute; top:" + (480 * sY)
+				+ "px; left:" + (720 * sX) + "px; width: " + (128 * scale )
+				+ "px; height: " + (128 * scale) + "px;");
+	
+	</script>
+	
+</body>
+</html>

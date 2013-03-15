@@ -2,6 +2,9 @@ iiCaptain
 =========
 
 
+Pivotal changes are not yet reflected.
+
+
 Attention and changes to the requirements below:
 
 Adobe just went live with build.phonegap.com on September 24th and they changed a couple of things with the 1.0 release.

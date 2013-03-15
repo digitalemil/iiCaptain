@@ -268,21 +268,21 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
+				<version>2.3.2</version>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.cloudfoundry</groupId>
 				<artifactId>cf-maven-plugin</artifactId>
 				<version>1.0.0.M4</version>
 				<configuration>
 					<server>mycloudfoundry-instance</server>
-					<target>http://api.vcap.me</target>
+					<target>http://172.16.227.92</target>
 					<url>iicaptain-test.vcap.me</url>
 					<appname>iicaptain-test</appname>
 					<memory>512</memory>
@@ -303,29 +303,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/selenium/*.java</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>unit-tests</id>
-						<phase>package</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<skip>false</skip>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			-->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
+				<configuration> <excludes> <exclude>**/selenium/*.java</exclude> </excludes> 
+				</configuration> <executions> <execution> <id>unit-tests</id> <phase>package</phase> 
+				<goals> <goal>test</goal> </goals> <configuration> <skip>false</skip> </configuration> 
+				</execution> </executions> </plugin> -->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.6</version>
@@ -439,7 +421,7 @@
 				</executions>
 
 			</plugin>
-			 
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -460,7 +442,7 @@
 					</execution>
 				</executions>
 			</plugin>
-				<plugin>
+			<plugin>
 				<groupId>org.cloudfoundry</groupId>
 				<artifactId>cf-maven-plugin</artifactId>
 				<version>1.0.0.M4</version>

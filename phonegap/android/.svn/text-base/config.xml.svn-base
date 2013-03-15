@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
+	id="iiCaptain" version="1.0.0">
+
+	<name>iiCaptain for Android</name>
+
+	<description>
+	</description>
+
+	<author href="http://digitalemil.de" email="digitalemil@googlemail.com">
+		Emil A. Siemes
+	</author>
+	<preference name="phonegap-version" value="1.7.0" />
+	<gap:platforms>
+		<gap:platform name="android" minVersion="2.1" />
+	</gap:platforms>
+
+	<!-- the default attribute can also be used -->
+	<icon src="icons/icon.png" default="true" />
+	<icon src="icons/icon-hover.png" hover="true" />
+
+	<!-- iOS requires specific dimensions for icons; classic iPhone screens, 
+		Retina displays, and iPad screens respectively -->
+	<icon src="icons/icon-iphone-57.png" width="57" height="57" />
+	<icon src="icons/icon-iphone-72.png" width="72" height="72" />
+	<icon src="icons/icon-iphone-114.png" width="114" height="114" />
+	<icon src="icons/icon-iphone-144.png" width="144" height="144" />
+
+	<!-- Android requires specific dimensions; ldpi, mdpi, and hdpi respectively -->
+	<icon src="icons/icon-android-36.png" width="36" height="36" />
+	<icon src="icons/icon-android-48.png" width="48" height="48" />
+	<icon src="icons/icon-android-72.png" width="72" height="72" />
+
+
+
+	<!-- if a single splash screen is specified it will be used for all platforms. 
+		Multiple splash screens are recommended for iOS -->
+	<!-- iOS requires specific dimensions for different devices; classic iPhone 
+		screens, Retina displays, and iPad screens -->
+	<gap:splash src="splash.png" />
+	<gap:splash src="splashes/Default-Landscape~ipad.png" width="1024"
+		height="768" />
+
+	<gap:splash src="splash/Default.png" gap:platform="android"
+		gap:density="ldpi" />
+	<gap:splash src="splash/Default.png" gap:platform="android"
+		gap:density="mdpi" />
+	<gap:splash src="splash/Default.png" gap:platform="android"
+		gap:density="hdpi" />
+	<gap:splash src="splash/Default.png" gap:platform="blackberry" />
+	<gap:splash src="splash/Default.png" gap:platform="winphone" />
+
+	<feature name="http://api.phonegap.com/1.0/network" />
+	<feature name="http://api.phonegap.com/1.0/notification" />
+	<preference name="disable-cursor" value="true" />
+	<preference name="fullscreen" value="true" />
+	<preference name="orientation" value="landscape" />
+	<!-- sample preference specification -->
+	<!-- <preference name="autorotate" value="false" readonly="true"/> -->
+</widget>

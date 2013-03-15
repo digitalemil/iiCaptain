@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>iiCaptain</title>
+
+<!-- 
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+ -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="user-scalable=no, width=device-width,  initial-scale=0.5, minimum-scale=0.5,  maximum-scale=2"/>
+<style>
+* {
+	-webkit-user-drag: none;
+	-webkit-touch-callout: none;
+	/* prevent callout to copy image, etc when tap to hold */
+	-webkit-text-size-adjust: none;
+	/* prevent webkit from resizing text to fit */
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	/* make transparent link [ remove highlighting ] selection, adjust last value opacity 0 to 1.0 */
+}
+</style>
+<style>
+canvas {
+	border: 0px solid black;
+}
+</style>
+
+</head>
+<body>
+
+<div id="iiCaptain" style="position:absolute; top:0px; left: 0px;">
+</div>
+<div id="dialog" ></div>
+
+<script language="JavaScript1.5" type="text/javascript" src="js/Timer.js"></script>
+<script language="JavaScript1.5" type="text/javascript" src="js/Tools.js"></script>
+<script language="JavaScript1.5" type="text/javascript" src="js/Creator.js"></script>
+<script language="JavaScript1.5" type="text/javascript" src="js/Sprite.js"></script>
+<script language="JavaScript1.5" type="text/javascript" src="js/Map.js"></script>
+<script language="JavaScript1.5" type="text/javascript" src="js/Ship.js"></script>
+<script language="JavaScript1.5" type="text/javascript" src="js/World.js"></script>
+<script language="JavaScript1.5" type="text/javascript" src="js/Home.js"></script>
+<script language="JavaScript1.5" type="text/javascript" src="js/iiCaptain.js"></script>
+
+<script language="JavaScript1.5" type="text/javascript">
+var isbb = false;
+var url = window.location.toString();
+url.match(/\?(.+)$/);
+var params = RegExp.$1;
+var params = params.split("&");
+var queryStringList = {};
+var NONAPP;
+
+var appname = window.navigator.appName;
+
+for(var i=0;i<params.length;i++)
+{
+    var tmp = params[i].split("=");
+    queryStringList[tmp[0]] = unescape(tmp[1]);
+}
+if(queryStringList['NONAPP']!= "true")
+	NONAPP= true;
+else
+	NONAPP= false
+	
+
+      setup= function() { 
+	       iiCaptainSetup(document.getElementById("iiCaptain", 384, 384, 24));
+     	
+            }
+    setTimeout(setup, 200);
+    /* Demo for ... */ 
+
+</script>
+
+</body>
+</html>
