@@ -17,24 +17,25 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.junit.Assert.*;
 
-public class MapTest  {
+public class Map  {
 	
 	
-	public MapTest() {
+	public Map() {
 		
 	}
 	public static void main(String[] args) throws IOException  {
-		(new MapTest()).test();
+		(new Map()).test();
 	}
 	
 	
 	@Test
     public void test() throws IOException{
-    	File file= new File("/tmp/ip.txt");
-    	BufferedReader in= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+		//for vFabric App D test
+    	//File file= new File("/tmp/ip.txt");
+    	//BufferedReader in= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
     	
-    	String ip= in.readLine();
-    	
+    	//String ip= in.readLine();
+    	String ip= "iicaptain-test.vcap.me";
         HtmlUnitDriver driver = new HtmlUnitDriver(true);
         System.out.println("MapTest: "+"http://"+ip+"/world/create?width=256&height=256&type=java");
         driver.get("http://"+ip+"/world/create?width=256&height=256&type=java");

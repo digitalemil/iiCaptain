@@ -30,6 +30,7 @@ function Ship() {
 	this.vdx= 0;
 	this.vdy= 0;
 	this.vn= 0;
+	this.visible= false;
 
 	this.newcourse= this.dir;
 	this.mapSprite= new MapSprite();
@@ -46,12 +47,13 @@ Ship.prototype.setActive= function(b) {
 	else {
 		atsea.width= 0;
 	}
-}
+};
 
 Ship.prototype.setCourse= function(deg, x, y) {
 	var shipdim= 20;
 
-	if(this.speed>=0.5 && x> canvaswidth/2-shipdim && x< canvaswidth/2+shipdim && y< canvasheight/2+shipdim && y> canvasheight/2-shipdim) {
+	
+	if(this.speed>=0.5 && x> canvaswidth/2-shipdim*scale && x< canvaswidth/2+shipdim*scale && y< canvasheight/2+shipdim*scale && y> canvasheight/2-shipdim*scale) {
 		if(!simple) {
 			this.speed-= 0.5;
 			if(this.speed< 0) {
@@ -69,7 +71,7 @@ Ship.prototype.setCourse= function(deg, x, y) {
 		return;
 	}
 
-	if(!simple && this.anker && this.onboard && x> canvaswidth/2-shipdim && x< canvaswidth/2+shipdim && y< canvasheight/2+shipdim && y> canvasheight/2-shipdim) {
+	if(!simple && this.anker && this.onboard && x> canvaswidth/2-shipdim*scale && x< canvaswidth/2+shipdim*scale && y< canvasheight/2+shipdim*scale && y> canvasheight/2-shipdim*scale) {
 		var phip=this.dir+30;
 		if(phip>= 60)
 			phip-= 60;
@@ -77,7 +79,7 @@ Ship.prototype.setCourse= function(deg, x, y) {
 		this.dy -= 1.0 * sin[phip] / tiledim; 	
 	}
 
-	if(x< canvaswidth/2-shipdim || x> canvaswidth/2+shipdim || y> canvasheight/2+shipdim || y< canvasheight/2-shipdim) {
+	if(x< canvaswidth/2-shipdim*scale || x> canvaswidth/2+shipdim*scale || y> canvasheight/2+shipdim*scale || y< canvasheight/2-shipdim*scale) {
 		if(this.onboard) {
 			dx1= x- canvaswidth/2;
 			dy1= y- canvasheight/2;			
@@ -92,7 +94,7 @@ Ship.prototype.setCourse= function(deg, x, y) {
 				shipdim= 2*tiledim;
 			}
 			if(x< (this.ship.x+this.ship.w/2)+ shipdim && x>= (this.ship.x+this.ship.w/2)- shipdim && y>=  (this.ship.y+this.ship.h/2)- shipdim && y< (this.ship.y+this.ship.h/2)+ shipdim) {
-				if(this.ship.x> canvaswidth/2- this.ship.w/2- 2*shipdim && this.ship.x<= canvaswidth/2- this.ship.w/2+ 2*shipdim && this.ship.y> canvasheight/2- this.ship.h/2- 2*shipdim && this.ship.y<= canvasheight/2- this.ship.h/2+ 2*shipdim) {
+				if(this.ship.x> canvaswidth/2- this.ship.w/2- 4*shipdim && this.ship.x<= canvaswidth/2- this.ship.w/2+ 4*shipdim && this.ship.y> canvasheight/2- this.ship.h/2- 4*shipdim && this.ship.y<= canvasheight/2- this.ship.h/2+ 4*shipdim) {
 					this.speed = 0.0;
 					this.captain.stopWalking();
 					this.onboard = true;
@@ -127,16 +129,17 @@ Ship.prototype.setCourse= function(deg, x, y) {
 			this.captain.startWalking();
 		}
 	}
-}
+};
 
 Ship.prototype.fires= function() {
 	return (this.ship.gunstate[0]!= 0 || this.ship.gunstate[1]!= 0 || this.gundeck.fires());
-}
+};
 
 Ship.prototype.setNight= function(v) {
 	this.mapSprite.setNight(!v);
 	this.night= v;
-}
+};
+
 Ship.prototype.update= function(timer) {
 	var delta= 1;
 	if(simple)
@@ -184,8 +187,8 @@ Ship.prototype.update= function(timer) {
 		this.olddx = this.dx;
 		this.olddy = this.dy;
 		this.olddir = this.dir;
-		this.dx += this.speed * cos[this.olddir] / tiledim;
-		this.dy -= this.speed * sin[this.olddir] / tiledim; 
+		this.dx += this.speed * cos[this.olddir] / tiledim ;
+		this.dy -= this.speed * sin[this.olddir] / tiledim ; 
 
 		if(this.dx> World.currentWidth+16) {
 			services.setView(home);
@@ -199,15 +202,15 @@ Ship.prototype.update= function(timer) {
 			this.olddx = this.dx;
 			this.olddy = this.dy;
 			this.olddir = this.dir;
-			this.dx += this.speed * cos[this.captain.dir] / tiledim;
-			this.dy -= this.speed * sin[this.captain.dir] / tiledim; 	
+			this.dx += this.speed * cos[this.captain.dir] / tiledim ;
+			this.dy -= this.speed * sin[this.captain.dir] / tiledim ; 	
 			if(this.checkCaptainCollision(2)) {
 				this.ship.move((-this.dx+this.olddx)*tiledim, (-this.dy+this.olddy)*tiledim);
 			}
 		}
 	}
 	this.paint();
-}
+};
 	
 Ship.prototype.getLandingZone= function() {
 	var tx = this.getTileX();
@@ -239,7 +242,7 @@ Ship.prototype.getLandingZone= function() {
 		}
 	}
 	return null;
-}
+};
 
 Ship.prototype.checkCaptainBB= function(t, sx, sy, ret) {
 	var a5, a6, a7, a8;
@@ -288,7 +291,7 @@ Ship.prototype.checkCaptainBB= function(t, sx, sy, ret) {
 		}
 	}
 	return ret;
-}
+};
 
 Ship.prototype.checkCaptainCollision= function(w) {
 	var t = World.get(this.getTileX(), this.getTileY());
@@ -327,7 +330,7 @@ Ship.prototype.checkCaptainCollision= function(w) {
 	} else {
 		return true;
 	}
-}
+};
 
 Ship.prototype.undoCaptainCollision= function() {
 	this.dx = this.olddx;
@@ -335,7 +338,7 @@ Ship.prototype.undoCaptainCollision= function() {
 	this.captain.stopWalking();
 	this.speed = 0.0;
 	return false;
-}
+};
 
 Ship.prototype.testLandingZone= function(x, y) {
 	if (x < 0 || y < 0 || x >= World.currentWidth - 1 || y >= World.currentHeight) {
@@ -372,7 +375,7 @@ Ship.prototype.testLandingZone= function(x, y) {
 	}
 
 	return null;
-}
+};
 
 Ship.prototype.land= function(tile) {
 	if(tile== null)
@@ -388,24 +391,24 @@ Ship.prototype.land= function(tile) {
 	this.dx = tile.x;
 	this.dy = tile.y;
 	this.ship.move(-(this.dx-this.shipx)*tiledim, -(this.dy-this.shipy)*tiledim);
-}
+};
 
 
 Ship.prototype.getSubTileX= function() {
 	return Math.floor((this.dx - Math.floor(this.dx)) * tiledim);
-}
+};
 
 Ship.prototype.getSubTileY= function() {
 	return Math.floor((this.dy - Math.floor(this.dy)) * tiledim);
-}
+};
 
 Ship.prototype.getTileX= function() {
 	return Math.floor(this.dx);
-}
+};
 
 Ship.prototype.getTileY= function() {
 	return Math.floor(this.dy);
-}      
+};   
 
 Ship.prototype.checkCollision= function() {
 	var sx = (canvaswidth- tiledim) / 2 - this.getSubTileX();
@@ -417,7 +420,7 @@ Ship.prototype.checkCollision= function() {
 			this.dx = this.olddx;
 			this.dy = this.olddy;
 			this.dir= this.olddir; 
-			this.anker= true
+			this.anker= true;
 		}
 		return true;
 	}
@@ -446,10 +449,10 @@ Ship.prototype.checkCollision= function() {
 				if(!this.anker) {
 					this.mapSprite.collision(-25);
 					if(this.mapSprite.hull<= 0) {
-						texts[0]= "Collision!";
+					/*	texts[0]= "Collision!";
 						texts[1]= "You sunk.";	
 						services.getDialog().set("res/schiffbruch2.png", texts[1]);
-						services.getDialog().on();
+						services.getDialog().on();*/
 					}
 				}
 				this.dx = this.olddx;
@@ -461,15 +464,15 @@ Ship.prototype.checkCollision= function() {
 		}
 	}
 	return true;
-}
+};
 
 Ship.prototype.choice1= function(t) {
 	alert("Choice1!: "+t.getTileX());
-}
+};
 
 Ship.prototype.choice2= function() {
 	alert("Choice2!");
-}
+};
 
 Ship.prototype.checkBB= function(t, sx, sy) {
 	if (this.anker) {
@@ -512,6 +515,8 @@ Ship.prototype.checkBB= function(t, sx, sy) {
 }
 
 Ship.prototype.paint= function() {  
+	if(!this.visible)
+		return
 	try {
 		if(this.sea== null && seaimg.width> 0) {
 			var w= Math.floor(canvaswidth / tiledim) * tiledim + 3 * tiledim;
@@ -587,12 +592,12 @@ Ship.prototype.paintMapImg= function() {
 
 	var x= -(Math.floor(sx/tiledim)+2);
 	var y= -(Math.floor(sy/tiledim)+2);
-	for(j= y; j<=-y+1; j++) {
-		for(i= x; i<=-x+1; i++) {
+	for(var j= y; j<=-y+1; j++) {
+		for(var i= x; i<=-x+1; i++) {
 			this.drawTile(this.mapctx, sx, sy, i, j, this.tx, this.ty);
 		}
 	}
-}
+};
 
 
 Ship.prototype.drawTile= function(ctx, sx, sy, x, y, tx, ty) {
@@ -613,7 +618,7 @@ Ship.prototype.drawTile= function(ctx, sx, sy, x, y, tx, ty) {
 	catch(e) {
 		console.log(e);
 	}
-}
+};
 
 var shipbxmin = [
                  [4, 7, 7], [0, 2, 4], [5, 7, 9], [5, 13, 16, 0, 3], [22, 20, 18], [0, 21, 21, 0, 0, 4, 4, 18, 17], [11, 8, 4, 21, 19], [0, 0, 5, 18, 16], [5, 7, 9], [5, 13, 16, 0, 3], [6, 0, 18, 0, 18, 4, 18, 2, 18], [0, 17, 17, 17, 17], [18, 10, 7, 23, 20], [0, 0, 5, 18, 16], [7, 1, 5, 1, 3], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]

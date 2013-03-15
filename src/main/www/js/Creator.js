@@ -1,31 +1,72 @@
 // Test me.
 var creation_state;
 var creation_maxstate;
+var location;
+
+function onGeoSuccess(position) {
+	latitude= position.coords.latitude;
+	longitude= position.coords.longitude;
+	var url= "/world/location?latitude="+latitude+"&longitude="+longitude+"&altitude="+position.coords.altitude+"&accuracy="+position.coords.accuracy+
+		"&altitudeAccuracy="+position.coords.altitudeAccuracy+"&heading"+position.coords.heading+"&speed="+position.coords.speed+"&timestamp="+position.timestamp;
+	console.log("sending Location to url: " + url+ " "+location);
+
+	if (window.XMLHttpRequest) {
+		try {
+			req = new XMLHttpRequest();
+		} catch (e) {
+			req = false;
+		}
+		// branch for IE/Windows ActiveX version
+	} else {
+		if (window.ActiveXObject) {
+			try {
+				req = new ActiveXObject("Msxml2.XMLHTTP");
+			} catch (e) {
+				try {
+					req = new ActiveXObject("Microsoft.XMLHTTP");
+				} catch (e) {
+					req = false;
+				}
+			}
+		}
+	}
+	if (req) {
+		req.onreadystatechange = locationSent;
+		req.open("GET",url, true);
+		req.send("");
+	} else {
+		alert("req== false");
+	}
+}
+
+// onError Callback receives a PositionError object
+//
+function onGeoError(error) {
+}
 
 function drawWait() {
 	creation_state++;
-	var w= document.getElementById("wait");
-	var t= "";
-	for(var i= 0; i< creation_maxstate; i++)
-		t+= "__";
-	t+="<br>";
-	for(var i= 0; i< creation_state; i++)
-		t+= "**";
-	
-	
-	
-	if(creation_state> creation_maxstate) {
-		iiCaptainRealStart(alldiv);
-	}
-	else {
-		w.innerHTML= t;
+	var w = document.getElementById("wait");
+	var t = "";
+	for ( var i = 0; i < creation_maxstate; i++)
+		t += "_";
+	t += "<br>";
+	for ( var i = 0; i < creation_state; i++)
+		t += "*";
+
+	if (creation_state > creation_maxstate) {
+		setTimeout("iiCaptainRealStart(alldiv)", 100);
+	} else {
+		w.innerHTML = t;
 	}
 }
 
 function createLoop(sz, szi) {
-	if(sz== 3) {
+	if (sz == 3) {
 		drawWait();
-		setTimeout("World.createRivers(World.map, World.currentWidth / 16, World.currentHeight / 16)", 50);
+		setTimeout(
+				"World.createRivers(World.map, World.currentWidth / 16, World.currentHeight / 16)",
+				50);
 		return;
 	}
 	if (sz >= 4)
@@ -55,17 +96,18 @@ function createLoop(sz, szi) {
 	var iy = -1;
 	ix = myRandom(0, World.currentWidth - imapw);
 	iy = myRandom(0, World.currentHeight - imaph);
-	Island.put(World.map, World.currentWidth, World.currentHeight, ix, iy, imap, imapw, imaph, false);
+	Island.put(World.map, World.currentWidth, World.currentHeight, ix, iy,
+			imap, imapw, imaph, false);
 	imap = null;
 	szi++;
-//	console.log("sz: "+sz+ " szi: "+szi+"  n[] "+World.n[sz]);
-	if(szi>= World.n[sz]) {
-	//		console.log(szi+ " "+World.n[sz]);
-		szi= 0;
+	// console.log("sz: "+sz+ " szi: "+szi+" n[] "+World.n[sz]);
+	if (szi >= World.n[sz]) {
+		// console.log(szi+ " "+World.n[sz]);
+		szi = 0;
 		sz++;
 	}
 	drawWait();
-	setTimeout("createLoop("+sz+", "+szi+")", 10);
+	setTimeout("createLoop(" + sz + ", " + szi + ")", 10);
 };
 
 function MyRegion() {
@@ -480,31 +522,28 @@ NWorld.prototype.createMap = function(width, height) {
 	this.max[2] = 12;
 	this.sz = 0;
 	this.szi = 0;
-	
+
 	this.clear(MyRegion.OPENSEA);
 	this.creation_max = 2 * (this.n[0] + this.n[1] * 2 + this.n[2] * 4) + 3 * 20;
 	this.creation = 0;
 	this.map.width = width;
 	this.map.height = height;
-	creation_state= 0;
-	creation_maxstate= this.n[0]+this.n[1]+this.n[2]+3;
-	
-	//drawWait();
+	creation_state = 0;
+	creation_maxstate = this.n[0] + this.n[1] + this.n[2] + 3;
+
+	// drawWait();
 	setTimeout("createLoop(0, 0)", 10);
 
-/*	this.createRivers(this.map, width / 16, height / 16);
-	this.creation += 20;
-
-	this.createForestLine(this.map, width + 16, height);
-	this.creation += 20;
-
-	this.createCoast(this.map, width + 16, height);
-	this.creation += 20;
-	*/
+	/*
+	 * this.createRivers(this.map, width / 16, height / 16); this.creation +=
+	 * 20;
+	 * 
+	 * this.createForestLine(this.map, width + 16, height); this.creation += 20;
+	 * 
+	 * this.createCoast(this.map, width + 16, height); this.creation += 20;
+	 */
 	return this.map;
 };
-
-
 
 NWorld.prototype.clear = function(value) {
 	for ( var x = 0; x < this.MAXWIDTH + this.EXTENT; x++) {
@@ -595,7 +634,9 @@ NWorld.prototype.createForestLine = function(map, w, h) {
 		}
 	}
 	drawWait();
-	setTimeout("World.createCoast(World.map, World.currentWidth + 16, World.currentHeight)", 10);
+	setTimeout(
+			"World.createCoast(World.map, World.currentWidth + 16, World.currentHeight)",
+			10);
 };
 
 NWorld.prototype.isWater = function(value) {
@@ -646,7 +687,9 @@ NWorld.prototype.createRivers = function(map, w, h) {
 		t++;
 		if (t > 100) {
 			drawWait();
-			setTimeout("World.createForestLine(World.map, World.currentWidth + 16, World.currentHeight)", 50);
+			setTimeout(
+					"World.createForestLine(World.map, World.currentWidth + 16, World.currentHeight)",
+					50);
 			return;
 		}
 		var x = myRandom(1, w - 2);
@@ -666,8 +709,10 @@ NWorld.prototype.createRivers = function(map, w, h) {
 		}
 	}
 	drawWait();
-	setTimeout("World.createForestLine(World.map, World.currentWidth + 16, World.currentHeight)", 50);
-	
+	setTimeout(
+			"World.createForestLine(World.map, World.currentWidth + 16, World.currentHeight)",
+			50);
+
 };
 
 NWorld.prototype.distanceTo = function(map, x, y, value) {

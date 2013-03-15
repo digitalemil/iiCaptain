@@ -110,7 +110,7 @@ Home.prototype.move= function(timer) {
         this.y--;
         
         if (this.y< -32 && this.captain.x < 72+this.x && this.captain.x > 24+this.x) {
-			ship.dx= 128;
+			ship.dx= World.currentWidth;
 			ship.dir= 30;
 			ship.anker= true;
 			this.y= 0;

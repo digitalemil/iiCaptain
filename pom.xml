@@ -1,32 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>net.iicaptain</groupId>
 	<artifactId>iicaptain</artifactId>
 	<version>0.8.${SVN_REVISION}-SNAPSHOT</version>
 	<packaging>war</packaging>
-<!--  -->
+	<!-- -->
 	<name>iiCaptain</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<org.springframework.version>3.1.0.RELEASE</org.springframework.version>
-		<deploymentProfileId>5</deploymentProfileId>
-		<nodename>iiCaptainLite</nodename>
-		<user>admin</user>
-		<passwd>Vmware1!</passwd>
-		<appdIp>172.16.227.192</appdIp>
-		<apmuser>admin</apmuser>
-		<apmpasswd>vmware1!</apmpasswd>
-		<apmIp>172.16.227.159</apmIp>
-		<svnIp>172.16.227.189</svnIp>
-		<data> '{\"node\":[ { \"name\":\"iiCaptainLite\", \"nodeComponent\":[
-			{ \"name\":\"iicaptain\", \"property\":[ { \"key\":\"war_file\",
-			\"value\":\"http://${svnIp}/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT.war\"}
-			]
-			} ] } ]}'
-		</data>
+
 	</properties>
 
 
@@ -47,6 +34,11 @@
 	</pluginRepositories>
 
 	<repositories>
+		<repository>
+			<id>gemfire-repository</id>
+			<name>Gemfire Repository</name>
+			<url>http://dist.gemstone.com/maven/release</url>
+		</repository>
 		<repository>
 			<id>central</id>
 			<name>Maven Repository Switchboard</name>
@@ -75,6 +67,26 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-hadoop</artifactId>
+			<version>1.0.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-core</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-gemfire</artifactId>
+			<version>3.0.0.M1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-core</artifactId>
+			<version>3.0.0.M1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-api</artifactId>
 			<version>2.25.0</version>
@@ -89,6 +101,11 @@
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-gemfire</artifactId>
+			<version>1.2.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -258,6 +275,35 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.cloudfoundry</groupId>
+				<artifactId>cf-maven-plugin</artifactId>
+				<version>1.0.0.M4</version>
+				<configuration>
+					<server>mycloudfoundry-instance</server>
+					<target>http://api.vcap.me</target>
+					<url>iicaptain-test.vcap.me</url>
+					<appname>iicaptain-test</appname>
+					<memory>512</memory>
+					<services>
+						<service>
+							<name>iicaptain-test-user-db</name>
+							<vendor>postgresql</vendor>
+						</service>
+					</services>
+				</configuration>
+				<executions>
+					<execution>
+						<id>deployToCF</id>
+						<phase>package</phase>
+						<goals>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -269,7 +315,7 @@
 				<executions>
 					<execution>
 						<id>unit-tests</id>
-						<phase>test</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>test</goal>
 						</goals>
@@ -279,19 +325,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<groupId>org.cloudfoundry</groupId>
-				<artifactId>cf-maven-plugin</artifactId>
-				<version>1.0.0.M1</version>
-				<configuration>
-					<server>mycloudfoundry-instance</server>
-					<target>http://api.cloudfoundry.com</target>
-					<url>iicaptain.cloudfoundry.com</url>
-					<memory>256</memory>
-					<services>iicaptain-user-db</services>
-				</configuration>
-			</plugin>
+			-->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.6</version>
@@ -347,49 +381,19 @@
 							<goal>run</goal>
 						</goals>
 					</execution>
-					<execution>
-						<id>provision</id>
-						<phase>package</phase>
-						<configuration>
-							<tasks>
-								<exec dir="." executable="ant" failonerror="true">
-									<arg line="vFabricApplicationDirectorDeploy" />
-									<arg line="-Ddata=${data}" />
-									<arg line="-Duser=${user}" />
-									<arg line="-Dpasswd=${passwd}" />
-									<arg line="-DappdIp=${appdIp}" />
-									<arg line="-DdeploymentProfileId=${deploymentProfileId}" />
-									<arg line="-Dnodename=${nodename}" />
-									<arg
-										line="-Dmycp=target/classes:target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/WEB-INF/lib/*" />
-								</exec>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>createAppInAPM</id>
-						<phase>integration-test</phase>
-						<configuration>
-							<tasks>
-								<exec dir="." executable="ant" failonerror="true">
-									<arg line="vFabricAPMCreateApp" />
-									<arg line="-Dapmuser=${apmuser}" />
-									<arg line="-Dapmpasswd=${apmpasswd}" />
-									<arg line="-DapmIp=${apmIp}" />
-									<arg line="-Dappname=${project.name}-0.8.${SVN_REVISION}" />
-									<arg line="-Ddescription=Release:0.8.${SVN_REVISION}-SNAPSHOT" />
-									<arg
-										line="-Dmycp=target/classes:target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/WEB-INF/lib/*" />
-								</exec>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
+					<!-- <execution> <id>provision</id> <phase>package</phase> <configuration> 
+						<tasks> <exec dir="." executable="ant" failonerror="true"> <arg line="vFabricApplicationDirectorDeploy" 
+						/> <arg line="-Ddata=${data}" /> <arg line="-Duser=${user}" /> <arg line="-Dpasswd=${passwd}" 
+						/> <arg line="-DappdIp=${appdIp}" /> <arg line="-DdeploymentProfileId=${deploymentProfileId}" 
+						/> <arg line="-Dnodename=${nodename}" /> <arg line="-Dmycp=target/classes:target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/WEB-INF/lib/*" 
+						/> </exec> </tasks> </configuration> <goals> <goal>run</goal> </goals> </execution> -->
+					<!-- <execution> <id>createAppInAPM</id> <phase>integration-test</phase> 
+						<configuration> <tasks> <exec dir="." executable="ant" failonerror="true"> 
+						<arg line="vFabricAPMCreateApp" /> <arg line="-Dapmuser=${apmuser}" /> <arg 
+						line="-Dapmpasswd=${apmpasswd}" /> <arg line="-DapmIp=${apmIp}" /> <arg line="-Dappname=${project.name}-0.8.${SVN_REVISION}" 
+						/> <arg line="-Ddescription=Release:0.8.${SVN_REVISION}-SNAPSHOT" /> <arg 
+						line="-Dmycp=target/classes:target/iicaptain-0.8.${SVN_REVISION}-SNAPSHOT/WEB-INF/lib/*" 
+						/> </exec> </tasks> </configuration> <goals> <goal>run</goal> </goals> </execution> -->
 					<execution>
 						<id>JMeterTests</id>
 						<phase>integration-test</phase>
@@ -409,11 +413,9 @@
 						<phase>package</phase>
 						<configuration>
 							<tasks>
-								<exec dir="." executable="ant" failonerror="true">
-								<!-- 	<arg line="-Ddevtype=bb" /> -->
-									<arg line="phonegap" />
-									<arg line="-DSVN_REVISION=${SVN_REVISION}" />
-								</exec>
+								<!-- <exec dir="." executable="ant" failonerror="true"> <arg line="-Ddevtype=bb" 
+									/> <arg line="phonegap" /> <arg line="-DSVN_REVISION=${SVN_REVISION}" /> 
+									</exec> -->
 							</tasks>
 						</configuration>
 						<goals>
@@ -437,6 +439,7 @@
 				</executions>
 
 			</plugin>
+			 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -449,10 +452,30 @@
 				<executions>
 					<execution>
 						<id>selenium-tests</id>
-						<phase>package</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>integration-test</goal>
 							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+				<plugin>
+				<groupId>org.cloudfoundry</groupId>
+				<artifactId>cf-maven-plugin</artifactId>
+				<version>1.0.0.M4</version>
+				<configuration>
+					<server>mycloudfoundry-instance</server>
+					<target>http://api.vcap.me</target>
+					<url>iicaptain-test.vcap.me</url>
+					<appname>iicaptain-test</appname>
+				</configuration>
+				<executions>
+					<execution>
+						<id>delete</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>delete</goal>
 						</goals>
 					</execution>
 				</executions>

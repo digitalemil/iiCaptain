@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xmlns:int-gfe="http://www.springframework.org/schema/integration/gemfire"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		 http://www.springframework.org/schema/gemfire http://www.springframework.org/schema/gemfire/spring-gemfire.xsd
+		 http://www.springframework.org/schema/integration/gemfire http://www.springframework.org/schema/integration/gemfire/spring-integration-gemfire.xsd">
+		
 
 
 
@@ -12,4 +16,25 @@
 	<bean id="creator" class="net.iicaptain.homeport.impl.CreatorServiceImpl">
 		<property name="pathToJSFile" value="/js/Creator.js"></property>
 	</bean>
+	
+	<gfe:client-cache id="gemfireCache" />
+
+	<gfe:pool id="pool" subscription-enabled="true">
+		<gfe:locator host="server1" port="44441" />
+		<gfe:locator host="server2" port="44441" />
+	</gfe:pool>
+
+	<gfe:client-region id="iicaptainWorlds" name="iicaptainWorlds-test"
+		pool-name="pool" shortcut="CACHING_PROXY">
+	</gfe:client-region>
+
+	<gfe:client-region id="iicaptainLocations" name="iicaptainLocations-test"
+		pool-name="pool" shortcut="CACHING_PROXY">
+	</gfe:client-region>
+	
+	<int-gfe:outbound-channel-adapter id="locationsToGem"
+		region="iicaptainLocations" />
+
+	<int-gfe:outbound-channel-adapter id="worldsToGem"
+		region="iicaptainWorlds" />
 </beans>

@@ -14,8 +14,11 @@ var seaimg;
 var canvaswidth, canvasheight;
 var w, h, scale, sX, sY;
 var localworld = false;
+var longitude;
+var latitude;
+var mapcdx, mapcdy;
 
-var server = "iicaptain.cloudfoundry.com"
+var server = "iicaptain.cloudfoundry.com";
 var user = "guest";
 var passwd = "guest";
 var vita = false;
@@ -113,9 +116,9 @@ var startSettings = function() {
 var cleanStartScreen = function() {
 	alldiv.removeChild(document.getElementById("start"));
 	alldiv.removeChild(document.getElementById("sj"));
-	//alldiv.removeChild(document.getElementById("slj"));
-	//alldiv.removeChild(document.getElementById("settings"));
-	if(document.getElementById("wait")!= null)
+	// alldiv.removeChild(document.getElementById("slj"));
+	// alldiv.removeChild(document.getElementById("settings"));
+	if (document.getElementById("wait") != null)
 		alldiv.removeChild(document.getElementById("wait"));
 	else {
 		alldiv.removeChild(document.getElementById("slj"));
@@ -136,7 +139,7 @@ var cleanSettingsScreen = function() {
 };
 
 var startGame = function(local) {
-//	console.log("NONAPP: " + NONAPP);
+	// console.log("NONAPP: " + NONAPP);
 	if (!local && server == null && NONAPP != false) {
 		alert('Please provide server details first (Under Settings).');
 		return;
@@ -231,36 +234,37 @@ var iiCaptainSetup = function(id) {
 			+ "px; left:" + ((960 - 256 * 1.5) / 2) * sX + "px; width: "
 			+ (256 * sX * 1.5) + "px; height: " + (48 * sY * 1.5) + "px;");
 	id.appendChild(settings);
+
 };
 
 var iiCaptainShipSetup = function(id) {
 	w = window.innerWidth;
 	h = window.innerHeight;
-	
-	//document.getElementById("start").src="";
-	//alert((document.getElementById("start")).src);
+
+	// document.getElementById("start").src="";
+	// alert((document.getElementById("start")).src);
 	alldiv.removeChild(document.getElementById("slj"));
-	//alldiv.removeChild(document.getElementById("start"));
-	//alldiv.removeChild(document.getElementById("sj"));
+	// alldiv.removeChild(document.getElementById("start"));
+	// alldiv.removeChild(document.getElementById("sj"));
 
 	alldiv.removeChild(document.getElementById("settings"));
 	alldiv.removeChild(document.getElementById("cont"));
 
-	document.getElementById("sj").src="res/pleasewait.png";
-	
-	
-	var para=document.createElement("p");
-	para.setAttribute("id", "wait");
-	para.innerHTML= "";
-	para.setAttribute("style", "text-align:left; position:absolute; top:" + (480 * sY)
-			+ "px; left:" + ((960) / 2-92) * sX + "px; width: "+(256*sX)+"px;");
-	alldiv.appendChild(para);
-//	alert(txtNode.style);
-	load();
-	//iiCaptainRealStart(id);
-};	
+	document.getElementById("sj").src = "res/pleasewait.png";
 
-var iiCaptainRealStart = function(id) {	
+	var para = document.createElement("p");
+	para.setAttribute("id", "wait");
+	para.innerHTML = "";
+	para.setAttribute("style", "text-align:left; position:absolute; top:"
+			+ (480 * sY) + "px; left:" + ((960) / 2 - 92) * sX + "px; width: "
+			+ (256 * sX) + "px;");
+	alldiv.appendChild(para);
+	// alert(txtNode.style);
+	load();
+	// iiCaptainRealStart(id);
+};
+
+var iiCaptainRealStart = function(id) {
 	cleanStartScreen();
 
 	// 920, 576
@@ -304,28 +308,35 @@ var iiCaptainRealStart = function(id) {
 	id.appendChild(atsea);
 
 	canvas.setAttribute("id", "canvas");
-	canvas.setAttribute("width", canvaswidth * scale);
-	canvas.setAttribute("height", canvasheight * scale);
-	canvas.setAttribute("style", "position:absolute; top:" + 72 * scale
-			+ "px; left: " + 62 * scale + "px;");
+	canvas.setAttribute("width", Math.floor(canvaswidth * scale));
+	canvas.setAttribute("height", Math.floor(canvasheight * scale));
+	canvas.setAttribute("style", "position:absolute; top:"
+			+ Math.floor(72 * scale) + "px; left: " + Math.floor(62 * scale)
+			+ "px;");
 	mapcanvas.setAttribute("id", "mapcanvas");
 	mapcanvas.setAttribute("style", "position:absolute; top:" + 80 * scale
-			+ "px; left: " + 580 * scale + "px;");
-	mapcanvas.setAttribute("width", 384 * scale + "px;");
-	mapcanvas.setAttribute("height", 384 * scale + "px;");
+			+ "px; left: " + Math.floor(580 * scale) + "px;");
+	mapcanvas.setAttribute("width", Math.floor(320 / 2+ 64)*scale+ "px;");
+	mapcanvas.setAttribute("height", Math.floor(320 / 2 + 36)*scale+ "px;");
+	mapcdx = Math.floor(320 / 2 + 64)*scale;
+	mapcdy = Math.floor(320 / 2 + 36)*scale;
 
-	mapimg.setAttribute("style", "position:absolute; top: " + 54 * scale
-			+ "px; left: " + 552 * scale + "px; width:" + 320 * scale
-			+ "px; height:" + 220 * scale + "px;");
-	sextantimg.setAttribute("style", "position:absolute; top: " + 80 * scale
-			+ "px; left: " + 794 * scale + "px;  width:" + 42 * scale
-			+ "px; height:" + 42 * scale + "px;");
+	mapimg.setAttribute("style", "position:absolute; top: "
+			+ Math.floor(54 * scale) + "px; left: " + Math.floor(552 * scale)
+			+ "px; width:" + Math.floor(360 * scale) + "px; height:"
+			+ Math.floor(252 * scale) + "px;");
+	sextantimg.setAttribute("style", "position:absolute; top: "
+			+ Math.floor(80 * scale) + "px; left: " + Math.floor(820 * scale)
+			+ "px;  width:" + Math.floor(42 * scale) + "px; height:"
+			+ Math.floor(42 * scale) + "px;");
 	atsea.setAttribute("id", "atsea");
-	atsea.setAttribute("style", "position:absolute; top:" + 324 * scale
-			+ "px; left: " + 556 * scale + "px; width:" + 320 * scale
-			+ "px; height:" + 200 * scale + "px;");
-	seaimg2.setAttribute("style", "position:absolute; top: " + 16 * scale
-			+ "px; left: " + 8 * scale + "px; width:" + 500 * scale + "px;");
+	atsea.setAttribute("style", "position:absolute; top:"
+			+ Math.floor(324 * scale) + "px; left: " + Math.floor(556 * scale)
+			+ "px; width:" + Math.floor(320 * scale) + "px; height:"
+			+ Math.floor(200 * scale) + "px;");
+	seaimg2.setAttribute("style", "position:absolute; top: "
+			+ Math.floor(16 * scale) + "px; left: " + Math.floor(8 * scale)
+			+ "px; width:" + Math.floor(500 * scale) + "px;");
 
 	canvas.setAttribute("onMouseDown", "iicaptainclick(event);");
 	canvas.setAttribute("onMouseUp", "mousedown=false");
@@ -333,20 +344,23 @@ var iiCaptainRealStart = function(id) {
 	canvas.setAttribute("ontouchend", "mousedown=false; lastkey= -1");
 	mapcanvas.setAttribute("onMouseDown",
 			"services.getView().mapSprite.navigate();");
-	mapcanvas.setAttribute("ontouchstart",
+/*	mapcanvas.setAttribute("ontouchstart",
 			"services.getView().mapSprite.navigate();");
-
+*/
 	if (vita) {
-		sextantimg.setAttribute("style", "position:absolute; top: " + 80
-				* scale + "px; left: " + 812 * scale + "px;  width:" + 42
-				* scale + "px; height:" + 42 * scale + "px;");
-		mapimg.setAttribute("style", "position:absolute; top: " + 54 * scale
-				+ "px; left: " + 552 * scale + "px; width:" + 340 * scale
-				+ "px; height:" + 240 * scale + "px;");
-		seaimg2
-				.setAttribute("style", "position:absolute; top: " + 16 * scale
-						+ "px; left: " + 8 * scale + "px; width:" + 548 * scale
-						+ "px;");
+		sextantimg.setAttribute("style", "position:absolute; top: "
+				+ Math.floor(80 * scale) + "px; left: "
+				+ Math.floor(812 * scale) + "px;  width:"
+				+ Math.floor(42 * scale) + "px; height:"
+				+ Math.floor(42 * scale) + "px;");
+		mapimg.setAttribute("style", "position:absolute; top: "
+				+ Math.floor(54 * scale) + "px; left: "
+				+ Math.floor(552 * scale) + "px; width:"
+				+ Math.floor(340 * scale) + "px; height:"
+				+ Math.floor(240 * scale) + "px;");
+		seaimg2.setAttribute("style", "position:absolute; top: "
+				+ Math.floor(16 * scale) + "px; left: " + Math.floor(8 * scale)
+				+ "px; width:" + Math.floor(548 * scale) + "px;");
 
 	}
 	seaimg.src = 'res/newsea.png';
@@ -354,12 +368,8 @@ var iiCaptainRealStart = function(id) {
 	nightimg.src = 'res/night.png';
 	sextantimg.src = 'res/sextant.png';
 
-	init();
-	ship.dx = World.currentWidth + 4;
-	ship.dy = World.currentHeight / 2;
-	ship.setNight(false);
-	ship.mapSprite.paint(ctx);
-	
+	setTimeout("init()", 100);
+	sendLocation();
 };
 
 // var TheRegion;
@@ -379,8 +389,8 @@ function iicaptainclick(e) {
 	ex /= scale;
 	ey /= scale;
 
-	var x = ex - canvaswidth / 2;
-	var y = canvasheight / 2 - ey;
+	var x = Math.floor(ex - canvaswidth / 2);
+	var y = Math.floor(canvasheight / 2 - ey);
 
 	var newdir = Math.atan2(y, x);
 	if (newdir < 0) {
@@ -397,6 +407,15 @@ var createOffScreenImage = function(width, height) {
 	return buffer;
 };
 var req;
+
+function sendLocation() {
+	req = false;
+	// branch for native XMLHttpRequest object
+	navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+}
+
+function locationSent() {
+}
 
 function loadData(url) {
 	req = false;
@@ -448,8 +467,7 @@ function processReqChange() {
 }
 
 function load() {
-	
-	var dim = [ 128, 128 ];
+	var dim = [ 256, 256 ];
 	if (!localworld) {
 		World = new NWorld();
 		// World.createMap(dim[0], dim[1]);
@@ -474,9 +492,9 @@ function load() {
 		World.currentWidth = dim[0];
 		World.currentHeight = dim[1];
 
-	//	init();
+		// init();
 		// ship.mapSprite= new MapSprite();
-	
+
 	} else {
 		// var worker = new Worker('js/CreatorWorker.js');
 		// worker.onmessage = function(event) {
@@ -496,6 +514,7 @@ function load() {
 }
 
 function init() {
+
 	canvas = document.getElementById("canvas");
 	ctx = canvas.getContext('2d');
 	ctx.scale(scale, scale);
@@ -519,7 +538,7 @@ function init() {
 
 	simple = false;
 	if (window.navigator.userAgent.match(".*Linux.*Safari.*") != null) {
-		simple = true;
+		// simple = true;
 	}
 	if (simple) {
 		timer.start(250);
@@ -535,6 +554,17 @@ function init() {
 	 */
 	nightTimer = new MyTimer(itsNight);
 	nightTimer.start(daylength);
+
+	ship.dx = World.currentWidth + 4;
+	ship.dy = World.currentHeight / 2;
+	ship.olddx = World.currentWidth + 4;
+	ship.olddy = World.currentHeight / 2;
+
+	console.log("dx: " + ship.dx);
+	ship.setNight(false);
+	ship.mapSprite.paint(ctx);
+	ship.visible = true;
+
 }
 
 function simple() {

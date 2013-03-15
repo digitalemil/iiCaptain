@@ -14,8 +14,8 @@
 		Emil A. Siemes
 	</author>
 
-	<preference name="phonegap-version" value="2.0.0" />
-
+	<preference name="phonegap-version" value="2.3.0" />
+	<preference name="orientation" value="landscape" />
 	<gap:platforms>
 		<gap:platform name="ios" />
 		<gap:platform name="android" minVersion="2.1" />
@@ -32,18 +32,18 @@
 	<icon src="icons/icon-android-48.png" width="48" height="48" />
 	<icon src="icons/icon-android-72.png" width="72" height="72" />
 
-	<gap:splash src="splashes/Default.png" />
-	<gap:splash height="768" src="splashes/Default-Landscape~ipad.png"
+	<gap:splash src="Default.png" />
+	<gap:splash height="768" src="Default-Landscape~ipad.png"
 		width="1024" />
-	<gap:splash src="splash/Default.png" gap:platform="android"
+	<gap:splash src="Default.png" gap:platform="android"
 		gap:density="ldpi" />
-	<gap:splash src="splash/Default.png" gap:platform="android"
+	<gap:splash src="Default.png" gap:platform="android"
 		gap:density="mdpi" />
-	<gap:splash src="splash/Default.png" gap:platform="android"
+	<gap:splash src="Default.png" gap:platform="android"
 		gap:density="hdpi" />
-	<gap:splash src="splash/Default.png" gap:platform="blackberry" />
-	<gap:splash src="splash/Default.png" gap:platform="winphone" />
-	
+	<gap:splash src="Default.png" gap:platform="blackberry" />
+	<gap:splash src="Default.png" gap:platform="winphone" />
+
 	<feature name="http://api.phonegap.com/1.0/notification" />
 	<feature name="http://api.phonegap.com/1.0/network" />
 
@@ -51,6 +51,6 @@
 
 	<preference name="fullscreen" value="true" />
 
-	<preference name="orientation" value="landscape" />
+<feature name="http://api.phonegap.com/1.0/geolocation"/>
 
 </widget>

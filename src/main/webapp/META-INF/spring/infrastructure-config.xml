@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-	xmlns:cloud="http://schema.cloudfoundry.org/spring"
+	xmlns:cloud="http://schema.cloudfoundry.org/spring" xmlns:gfe="http://www.springframework.org/schema/gemfire"
 	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
 		http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/gemfire http://www.springframework.org/schema/gemfire/spring-gemfire.xsd">
 
-	<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> 
-		<property name="jndiName" value="jdbc/MyDB"/> <property name="resourceRef" 
-		value="true"/> </bean> <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"> 
-		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" 
-		/> <property name="url" value="jdbc:derby:born2run;create=true" /> <property 
-		name="initialSize" value="5" /> <property name="maxActive" value="50" /> 
-		</bean> -->
+	<gfe:client-cache id="gemfireCache" />
+
+	<gfe:pool id="pool" subscription-enabled="true">
+		<gfe:locator host="server1" port="44441" />
+		<gfe:locator host="server2" port="44441" />
+	</gfe:pool>
+
+	<gfe:client-region id="iicaptainWorlds" name="iicaptainWorlds"
+		pool-name="pool" shortcut="CACHING_PROXY">
+	</gfe:client-region>
+
+	<gfe:client-region id="iicaptainLocations" name="iicaptainLocations"
+		pool-name="pool" shortcut="CACHING_PROXY">
+	</gfe:client-region>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName"
@@ -27,9 +34,4 @@
 		<jdbc:script location="/WEB-INF/sql/security-schema.sql" />
 		<jdbc:script location="/WEB-INF/sql/default-users.sql" />
 	</jdbc:initialize-database>
-	<!-- <cloud:data-source id="dataSource" /> <jdbc:embedded-database id="dataSource" 
-		type="DERBY"> </jdbc:embedded-database> <bean class="org.apache.commons.dbcp.BasicDataSource" 
-		destroy-method="close" id="dataSource"> <property name="driverClassName" 
-		value="org.h2.Driver" /> <property name="url" value="jdbc:h2:mem:" /> <property 
-		name="username" value="sa" /> <property name="password" value="" /> </bean> -->
 </beans>
