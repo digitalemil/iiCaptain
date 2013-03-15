@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== -->
+<!-- ====================================================================== -->
+
+<project name="Aye Aye Captain!" basedir="." default="buildAndTest">
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+
+		<classpath>
+
+			<pathelement location="lib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+	<property name="build.dir" value="build" />
+
+	<property name="tests.dir" value="tests" />
+
+	<property name="junit" value="lib/junit-4.10.jar" />
+
+	<property name="master-file" value="iicaptain" />
+
+	<property name="appId" value="213286" />
+
+	<property name="www.dir" value="src/main/www" />
+
+	<switch value="${devtype}">
+		<case value="bb">
+			<var name="www" value="www-bb" />
+		</case>
+		<default>
+			<var name="www" value="www" />
+		</default>
+	</switch>
+
+	<target name="phonegap" depends="prepare.dirs, www">
+		<exec executable="tools/phoneGapBuild.sh">
+			<arg value="/tmp/iiCaptain-s-Ship" />
+			<arg value="${www}" />
+			<arg value="${appId}" />
+			<arg value="digitalemil@googlemail.com:Mm7496812abc" />
+			<arg value="https://github.com/digitalemil/Captain-s-Ship.git" />
+		</exec>
+	</target>
+
+	<target name="buildAndTest" depends="phonegap, test" />
+
+	<target name="www" depends="">
+		<copy todir="${www}">
+			<fileset dir="src/main/www">
+			</fileset>
+		</copy>
+
+		<switch value="${devtype}">
+			<case value="bb">
+				<exec executable="sed" output="${www.dir}/index.html">
+					<arg value="-e" />
+					<arg value="s/isbb = false/isbb=true/" />
+					<arg value="${www.dir}/index.html" />
+				</exec>
+				<delete>
+					<fileset dir="${www}/splashes">
+						<exclude name="splash-bb.png" />
+					</fileset>
+					<fileset dir="${www}/icons">
+						<exclude name="icon.png" />
+					</fileset>
+				</delete>
+			</case>
+			<default />
+		</switch>
+	</target>
+
+	<target name="clean">
+		<delete dir="${www}" />
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="prepare.dirs">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/tests" />
+	</target>
+
+
+	<path id="classpath.test">
+		<pathelement location="${build.dir}/tests" />
+		<pathelement location="${junit}" />
+	</path>
+
+	<target name="compile-tests" depends="prepare.dirs">
+
+		<javac debug="on" deprecation="off" destdir="${build.dir}/tests" optimize="off" source="1.5" srcdir="${tests.dir}">
+
+			<classpath>
+				<pathelement path="${junit}">
+				</pathelement>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="test" depends="compile-tests">
+
+		<junit haltonfailure="yes" printsummary="yes">
+
+			<classpath refid="classpath.test">
+			</classpath>
+
+			<test name="de.digitalemil.thisandthat.tests.TestAll" haltonfailure="no" outfile="${build.dir}/tests/results">
+
+				<formatter type="xml" />
+			</test>
+		</junit>
+	</target>
+
+
+	<target name="vFabricApplicationDirectorDeploy">
+		<exec executable="java" output="/tmp/ip.txt">
+			<arg value="-cp" />
+			<arg value="${mycp}" />
+			<arg value="org.springsource.vfabric.tools.AppDirector" />
+			<arg value="${user}" />
+			<arg value="${passwd}" />
+			<arg value="${appdIp}" />
+			<arg value="${deploymentProfileId}" />
+			<arg value="${nodename}" />
+			<arg value="${data}" />
+		</exec>
+	</target>
+
+	<target name="vFabricAPMCreateApp">
+		<exec executable="java">
+			<arg value="-cp" />
+			<arg value="${mycp}" />
+			<arg value="org.springsource.vfabric.tools.APM" />
+			<arg value="${apmuser}" />
+			<arg value="${apmpasswd}" />
+			<arg value="${apmIp}" />
+			<arg value="8443" />
+			<arg value="${appname}"/>
+			<arg value="${description}" />
+		</exec>
+	</target>
+	
+	<target name="JMeter">
+			<exec executable="./createProperties.sh" dir="jmeter" />
+			<exec executable="apache-jmeter-2.7/bin/jmeter" dir="jmeter" >
+				<arg value="-n" />
+				<arg value="-t" />
+				<arg value="iicaptain.jmx" />
+				<arg value="-l"/>
+				<arg value="jmeter.log" />
+				<arg value="-p" />
+				<arg value="jmeter.properties" />
+			</exec>
+		</target>
+</project>
